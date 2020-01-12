@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumAppContext))]
-    partial class ScrumAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200111101033_removerandomnum")]
+    partial class removerandomnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,8 +224,11 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -232,8 +237,6 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Projects");
                 });
@@ -287,13 +290,6 @@ namespace ScrumApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
-                {
-                    b.HasOne("ScrumApp.Models.AppUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
                 });
 #pragma warning restore 612, 618
         }

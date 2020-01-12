@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScrumApp.Data;
 using ScrumApp.Models;
 
@@ -21,9 +22,11 @@ namespace ScrumApp.Controllers
         }
         public IActionResult Index()
         {
-            var projects = context.Projects;
+            var projects = context.Projects.Include(x => x.Author);
             return View(projects);
         }
+
+
 
         public IActionResult Create() => View();
 
@@ -34,14 +37,13 @@ namespace ScrumApp.Controllers
 
             if (ModelState.IsValid)
             {
-
                 AppUser appUser = await userManager.GetUserAsync(HttpContext.User);
-                //userProject.Author = appUser;
+                userProject.Author = appUser;
 
                 string slug = userProject.Name.ToLower().Replace(" ", "-");
                 userProject.Slug = slug;
 
-                context.Add(userProject);
+                context.Projects.Add(userProject);
                 await context.SaveChangesAsync();
 
                 return RedirectToAction("Index");

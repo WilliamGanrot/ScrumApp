@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumAppContext))]
-    partial class ScrumAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200111133833_addauthor2")]
+    partial class addauthor2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,6 +226,9 @@ namespace ScrumApp.Migrations
 
                     b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

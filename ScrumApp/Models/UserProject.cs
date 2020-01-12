@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,11 +14,9 @@ namespace ScrumApp.Models
 
         public string Slug { get; set; }
 
-        public static implicit operator UserProject(AppUser v)
-        {
-            throw new NotImplementedException();
-        }
+        
+        public AppUser Author { get; set; }
 
-        //public AppUser Author { get; set; }
+        
     }
 }

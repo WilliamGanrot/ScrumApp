@@ -10,8 +10,8 @@ using ScrumApp.Data;
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200109213759_add_UserProject_modell")]
-    partial class add_UserProject_modell
+    [Migration("20200110143744_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,6 +223,9 @@ namespace ScrumApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Author")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

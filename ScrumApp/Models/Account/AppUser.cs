@@ -8,5 +8,6 @@ namespace ScrumApp.Models
 {
     public class AppUser : IdentityUser
     {
+        //public IEnumerable<UserProject> Projects { get; set; }
     }
 }

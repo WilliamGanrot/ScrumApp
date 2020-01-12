@@ -26,6 +26,7 @@ namespace ScrumApp.Areas.Admin.Controllers
         {
             var users = userManager.Users;
             ViewBag.roles = roleManager.Roles;
+
             return View(users);
         }
 

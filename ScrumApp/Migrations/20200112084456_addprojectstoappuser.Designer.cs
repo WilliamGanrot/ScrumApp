@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumAppContext))]
-    partial class ScrumAppContextModelSnapshot : ModelSnapshot
+    [Migration("20200112084456_addprojectstoappuser")]
+    partial class addprojectstoappuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,8 +224,11 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorId")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AuthorName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -233,7 +238,7 @@ namespace ScrumApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Projects");
                 });
@@ -291,9 +296,9 @@ namespace ScrumApp.Migrations
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
                 {
-                    b.HasOne("ScrumApp.Models.AppUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
+                    b.HasOne("ScrumApp.Models.AppUser", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("AppUserId");
                 });
 #pragma warning restore 612, 618
         }
