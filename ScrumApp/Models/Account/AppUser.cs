@@ -11,6 +11,7 @@ namespace ScrumApp.Models
 
         //public UserProject Projects { get; set; }
         //public int xxxx { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        //public virtual ICollection<Project> Projects { get; set; }
+        public ICollection<UserProject> UserProjects { get; set; }
     }
 }

@@ -8,12 +8,13 @@ namespace ScrumApp.Models
 {
     public class Project
     {
-        public int Id { get; set; }
+        [Column("Id")]
+        public int ProjectId { get; set; }
 
-        public string Name { get; set; }
+        [Column("Name")]
+        public string ProjectName { get; set; }
 
         public string Slug { get; set; }
-
 
 
         public string AuthorId { get; set; }
@@ -21,8 +22,7 @@ namespace ScrumApp.Models
         public virtual AppUser Author { get; set; }
 
 
+        public ICollection<UserProject> UserProjects { get; set; }
 
-
-        //public virtual AppUser Author { get; set; }
     }
 }

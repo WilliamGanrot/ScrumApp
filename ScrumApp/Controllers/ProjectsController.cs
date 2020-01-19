@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using ScrumApp.Data;
 using ScrumApp.Models;
+using ScrumApp.Models.Account;
 
 namespace ScrumApp.Controllers
 {
@@ -20,38 +22,75 @@ namespace ScrumApp.Controllers
             this.context = context;
             this.userManager = userManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //var projects = context.Projects;
-            var projects = context.Projects.Include(x => x.Author);
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+            var projects = context.UserProjects
+                .Where(x => x.AppUser.Id == user.Id)
+                .Include(x => x.Project.Author)
+                .Select(x => x.Project)
+                .ToList();
+
+            foreach(var project in projects)
+            {
+                
+            }
             return View(projects);
         }
-
 
 
         public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Project project)
+        public async Task<IActionResult> Create(CreateProject createProject)
         {
-            
+
             if (ModelState.IsValid)
             {
-                AppUser appUser = await userManager.GetUserAsync(HttpContext.User);
-                
-                project.Author = appUser;
-                project.AuthorId = appUser.Id;
-                
-                context.Projects.Add(project);
-                await context.SaveChangesAsync();
+                AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-                //appUser.Projects.Add(userProject);
-                appUser.Projects.Add(project);
-                await userManager.UpdateAsync(appUser);
+                if (user == null)
+                {
+                    //should return some kind of error
+                    System.Diagnostics.Debug.WriteLine("User Doesn't exist");
+                    return RedirectToAction("Index");
+                }
 
-                return RedirectToAction("Index");
+                string slug = createProject.ProjectName.ToLower().Replace(" ", "-");
+
+                Project project = new Project
+                {
+                    ProjectName = createProject.ProjectName,
+                    Slug = slug,
+                    Author = user 
+                };
+
+                project.UserProjects = new List<UserProject>
+                {
+                    new UserProject
+                    {
+                        AppUser = user,
+                        Project = project
+                    }
+                };
+
+                await context.Projects.AddAsync(project);
+                context.SaveChanges();
             }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Details(int id)
+        {
+            var project = context.Projects
+                .Where(x => x.ProjectId == id)
+                .Include(x => x.UserProjects)
+                .ThenInclude(x => x.AppUser)
+                .First();
+
             return View(project);
         }
 
@@ -67,26 +106,29 @@ namespace ScrumApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> tempAddProject()
+
+        public IActionResult Join()
         {
-            AppUser appUser = await userManager.GetUserAsync(HttpContext.User);
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Join(JoinProject joinProject)
+        {
+            Project project = await context.Projects.FindAsync(joinProject.ProjectId);
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            Project project = new Project
+            UserProject userProject = new UserProject
             {
-                Name = "temp-project",
-                Author = appUser
+                AppUser = user,
+                Project = project
             };
+           
+            project.UserProjects = new List<UserProject> { userProject };
 
-            context.Projects.Add(project);
-            await context.SaveChangesAsync();
+            context.SaveChanges();
 
-
-            //appUser.Projects.Add(project);
-
-            await userManager.UpdateAsync(appUser);
-
-            return Ok();
+            return RedirectToAction("Index");
         }
     }
 }

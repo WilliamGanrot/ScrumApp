@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    partial class ScrumApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200119085607_rename-project-properites")]
+    partial class renameprojectproperites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +225,6 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthorId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ProjectName")
                         .HasColumnName("Name")
                         .HasColumnType("nvarchar(max)");
@@ -234,8 +233,6 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProjectId");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Projects");
                 });
@@ -252,7 +249,7 @@ namespace ScrumApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProjects");
+                    b.ToTable("UserProject");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -304,13 +301,6 @@ namespace ScrumApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("ScrumApp.Models.Project", b =>
-                {
-                    b.HasOne("ScrumApp.Models.AppUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
                 });
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>

@@ -18,13 +18,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProjectName)
             </th>
-            <th>Author</th>
+            <th>
+                Author
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectId)
@@ -36,11 +37,11 @@
                 @Html.DisplayFor(modelItem => item.Author.UserName)
             </td>
             <td>
-                <a asp-action="Remove" asp-route-id="@item.ProjectId">Delete</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>
-        }
+}
     </tbody>
 </table>
-

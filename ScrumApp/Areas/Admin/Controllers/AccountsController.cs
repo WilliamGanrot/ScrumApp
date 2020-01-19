@@ -42,8 +42,9 @@ namespace ScrumApp.Areas.Admin.Controllers
             return View("Index", users);
         }
 
-        public async Task<IActionResult> Remove(string id)
+        public IActionResult Remove(string id)
         {
+            /*
             var user = await userManager.FindByIdAsync(id);
             //context.Projects.RemoveRange(user);
 
@@ -59,8 +60,9 @@ namespace ScrumApp.Areas.Admin.Controllers
 
             await context.SaveChangesAsync();
             await userManager.DeleteAsync(user);
-
+            */
             return RedirectToAction("Index");
+            
 
         }
 
