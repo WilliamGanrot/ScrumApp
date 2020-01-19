@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace ScrumApp.Data
 {
-    public class ScrumAppContext : IdentityDbContext<AppUser>
+    public class ScrumApplicationContext : IdentityDbContext<AppUser>
     {
-        public ScrumAppContext(DbContextOptions<ScrumAppContext> options)
+        public ScrumApplicationContext(DbContextOptions<ScrumApplicationContext> options)
             : base(options)
         {
         }
+        public DbSet<Project> Projects { get; set; }
 
-        public DbSet<UserProject> Projects { get; set; }
     }
+
 }

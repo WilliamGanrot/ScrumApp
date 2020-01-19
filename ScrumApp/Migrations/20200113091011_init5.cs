@@ -2,7 +2,7 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class removeauthorid : Migration
+    public partial class init5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

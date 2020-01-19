@@ -9,9 +9,9 @@ using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200111100815_test")]
-    partial class test
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200115090419_fk2")]
+    partial class fk2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -204,9 +204,6 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
-                    b.Property<int>("randomnum")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -227,11 +224,8 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AuthorName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -240,6 +234,10 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId")
+                        .IsUnique()
+                        .HasFilter("[AuthorId] IS NOT NULL");
 
                     b.ToTable("Projects");
                 });
@@ -293,6 +291,13 @@ namespace ScrumApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
+                {
+                    b.HasOne("ScrumApp.Models.AppUser", "Author")
+                        .WithOne("Projects")
+                        .HasForeignKey("ScrumApp.Models.UserProject", "AuthorId");
                 });
 #pragma warning restore 612, 618
         }

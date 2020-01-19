@@ -9,9 +9,9 @@ using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200112084456_addprojectstoappuser")]
-    partial class addprojectstoappuser
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200115091724_Update-UserIdentity")]
+    partial class UpdateUserIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -224,11 +224,8 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AuthorName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -238,7 +235,7 @@ namespace ScrumApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Projects");
                 });
@@ -296,9 +293,9 @@ namespace ScrumApp.Migrations
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
                 {
-                    b.HasOne("ScrumApp.Models.AppUser", null)
+                    b.HasOne("ScrumApp.Models.AppUser", "Author")
                         .WithMany("Projects")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AuthorId");
                 });
 #pragma warning restore 612, 618
         }

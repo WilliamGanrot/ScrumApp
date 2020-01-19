@@ -9,9 +9,9 @@ using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200112085213_addauthor5")]
-    partial class addauthor5
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200115110112_a")]
+    partial class a
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -294,7 +294,7 @@ namespace ScrumApp.Migrations
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
                 {
                     b.HasOne("ScrumApp.Models.AppUser", "Author")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("AuthorId");
                 });
 #pragma warning restore 612, 618

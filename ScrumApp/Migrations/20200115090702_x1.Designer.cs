@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    partial class ScrumAppContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200115090702_x1")]
+    partial class x1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,6 +204,9 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<int>("xxxx")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -233,7 +238,9 @@ namespace ScrumApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId")
+                        .IsUnique()
+                        .HasFilter("[AuthorId] IS NOT NULL");
 
                     b.ToTable("Projects");
                 });
@@ -292,8 +299,8 @@ namespace ScrumApp.Migrations
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
                 {
                     b.HasOne("ScrumApp.Models.AppUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .WithOne("Projects")
+                        .HasForeignKey("ScrumApp.Models.UserProject", "AuthorId");
                 });
 #pragma warning restore 612, 618
         }

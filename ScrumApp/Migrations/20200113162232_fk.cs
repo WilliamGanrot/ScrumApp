@@ -2,7 +2,7 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class addauthor2 : Migration
+    public partial class fk : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

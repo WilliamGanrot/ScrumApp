@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ScrumApp.Models.UserProject>
+﻿@model IEnumerable<ScrumApp.Models.Project>
 
 @{
     ViewData["Title"] = "Index";
@@ -35,7 +35,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Author.UserName)
             </td>
-
             <td>
                 <a asp-action="Remove" asp-route-id="@item.Id">Delete now!</a>
             </td>

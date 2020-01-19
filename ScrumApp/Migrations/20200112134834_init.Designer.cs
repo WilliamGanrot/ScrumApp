@@ -9,9 +9,9 @@ using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200110143744_Initial")]
-    partial class Initial
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200112134834_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -224,8 +224,8 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -234,6 +234,8 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Projects");
                 });
@@ -287,6 +289,13 @@ namespace ScrumApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
+                {
+                    b.HasOne("ScrumApp.Models.AppUser", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("AppUserId");
                 });
 #pragma warning restore 612, 618
         }

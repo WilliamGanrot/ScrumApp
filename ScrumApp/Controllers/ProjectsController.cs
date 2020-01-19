@@ -12,16 +12,17 @@ namespace ScrumApp.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ScrumAppContext context;
+        private readonly ScrumApplicationContext context;
         private readonly UserManager<AppUser> userManager;
 
-        public ProjectsController(ScrumAppContext context, UserManager<AppUser> userManager)
+        public ProjectsController(ScrumApplicationContext context, UserManager<AppUser> userManager)
         {
             this.context = context;
             this.userManager = userManager;
         }
         public IActionResult Index()
         {
+            //var projects = context.Projects;
             var projects = context.Projects.Include(x => x.Author);
             return View(projects);
         }
@@ -32,35 +33,60 @@ namespace ScrumApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserProject userProject)
+        public async Task<IActionResult> Create(Project project)
         {
-
+            
             if (ModelState.IsValid)
             {
                 AppUser appUser = await userManager.GetUserAsync(HttpContext.User);
-                userProject.Author = appUser;
-
-                string slug = userProject.Name.ToLower().Replace(" ", "-");
-                userProject.Slug = slug;
-
-                context.Projects.Add(userProject);
+                
+                project.Author = appUser;
+                project.AuthorId = appUser.Id;
+                
+                context.Projects.Add(project);
                 await context.SaveChangesAsync();
+
+                //appUser.Projects.Add(userProject);
+                appUser.Projects.Add(project);
+                await userManager.UpdateAsync(appUser);
 
                 return RedirectToAction("Index");
             }
-            return View(userProject);
+            return View(project);
         }
 
         public async Task<IActionResult> Remove(int id)
         {
 
-            UserProject userProject = await context.Projects.FindAsync(id);
+            Project userProject = await context.Projects.FindAsync(id);
 
 
             context.Projects.Remove(userProject);
             await context.SaveChangesAsync();
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> tempAddProject()
+        {
+            AppUser appUser = await userManager.GetUserAsync(HttpContext.User);
+
+
+            Project project = new Project
+            {
+                Name = "temp-project",
+                Author = appUser
+            };
+
+            context.Projects.Add(project);
+            await context.SaveChangesAsync();
+
+
+            //appUser.Projects.Add(project);
+
+            await userManager.UpdateAsync(appUser);
+
+            return Ok();
         }
     }
 }

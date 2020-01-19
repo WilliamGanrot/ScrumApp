@@ -29,10 +29,10 @@ namespace ScrumApp
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<ScrumAppContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ScrumAppContext")));
+            services.AddDbContext<ScrumApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ScrumApplicationContext")));
 
             services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<ScrumAppContext>()
+                .AddEntityFrameworkStores<ScrumApplicationContext>()
                 .AddDefaultTokenProviders();
         }
 

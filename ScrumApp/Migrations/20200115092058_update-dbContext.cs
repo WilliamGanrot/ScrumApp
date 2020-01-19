@@ -2,40 +2,44 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class addauthor5 : Migration
+    public partial class updatedbContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Projects_AspNetUsers_AppUserId",
+                name: "FK_Projects_AspNetUsers_AuthorId",
                 table: "Projects");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Projects_AppUserId",
-                table: "Projects");
-
-            migrationBuilder.DropColumn(
-                name: "AppUserId",
-                table: "Projects");
-
-            migrationBuilder.DropColumn(
-                name: "AuthorName",
-                table: "Projects");
+            migrationBuilder.AlterColumn<string>(
+                name: "AuthorId",
+                table: "Projects",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(450)",
+                oldNullable: true);
 
             migrationBuilder.AddColumn<string>(
-                name: "AuthorId",
+                name: "AuthorId1",
                 table: "Projects",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_AuthorId",
+                name: "IX_Projects_AuthorId1",
                 table: "Projects",
-                column: "AuthorId");
+                column: "AuthorId1");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Projects_AspNetUsers_AuthorId",
                 table: "Projects",
                 column: "AuthorId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Projects_AspNetUsers_AuthorId1",
+                table: "Projects",
+                column: "AuthorId1",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -47,35 +51,29 @@ namespace ScrumApp.Migrations
                 name: "FK_Projects_AspNetUsers_AuthorId",
                 table: "Projects");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_Projects_AspNetUsers_AuthorId1",
+                table: "Projects");
+
             migrationBuilder.DropIndex(
-                name: "IX_Projects_AuthorId",
+                name: "IX_Projects_AuthorId1",
                 table: "Projects");
 
             migrationBuilder.DropColumn(
-                name: "AuthorId",
+                name: "AuthorId1",
                 table: "Projects");
 
-            migrationBuilder.AddColumn<string>(
-                name: "AppUserId",
+            migrationBuilder.AlterColumn<string>(
+                name: "AuthorId",
                 table: "Projects",
                 type: "nvarchar(450)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "AuthorName",
-                table: "Projects",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_AppUserId",
-                table: "Projects",
-                column: "AppUserId");
+                nullable: true,
+                oldClrType: typeof(string));
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Projects_AspNetUsers_AppUserId",
+                name: "FK_Projects_AspNetUsers_AuthorId",
                 table: "Projects",
-                column: "AppUserId",
+                column: "AuthorId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);

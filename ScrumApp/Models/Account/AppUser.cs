@@ -8,6 +8,9 @@ namespace ScrumApp.Models
 {
     public class AppUser : IdentityUser
     {
-        //public IEnumerable<UserProject> Projects { get; set; }
+
+        //public UserProject Projects { get; set; }
+        //public int xxxx { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
     }
 }

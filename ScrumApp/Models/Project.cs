@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ScrumApp.Models
 {
-    public class UserProject
+    public class Project
     {
         public int Id { get; set; }
 
@@ -14,9 +14,15 @@ namespace ScrumApp.Models
 
         public string Slug { get; set; }
 
-        
-        public AppUser Author { get; set; }
 
-        
+
+        public string AuthorId { get; set; }
+
+        public virtual AppUser Author { get; set; }
+
+
+
+
+        //public virtual AppUser Author { get; set; }
     }
 }

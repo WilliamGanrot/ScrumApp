@@ -9,9 +9,9 @@ using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
-    [DbContext(typeof(ScrumAppContext))]
-    [Migration("20200110143849_addauthortouserprojectmodel")]
-    partial class addauthortouserprojectmodel
+    [DbContext(typeof(ScrumApplicationContext))]
+    [Migration("20200119081132_userproject-to-project")]
+    partial class userprojecttoproject
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -217,18 +217,15 @@ namespace ScrumApp.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
+            modelBuilder.Entity("ScrumApp.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AuthorName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -237,6 +234,8 @@ namespace ScrumApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Projects");
                 });
@@ -290,6 +289,13 @@ namespace ScrumApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.Project", b =>
+                {
+                    b.HasOne("ScrumApp.Models.AppUser", "Author")
+                        .WithMany("Projects")
+                        .HasForeignKey("AuthorId");
                 });
 #pragma warning restore 612, 618
         }
