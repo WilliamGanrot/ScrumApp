@@ -42,25 +42,27 @@ namespace ScrumApp.Areas.Admin.Controllers
             return View("Index", users);
         }
 
-        public IActionResult Remove(string id)
+        public async Task<IActionResult> Remove(string id)
         {
-            /*
+            
             var user = await userManager.FindByIdAsync(id);
+
+
             //context.Projects.RemoveRange(user);
 
             if (user == null)
                 return NotFound();
-            
-            //ask on stackoverflow??
-            foreach(var p in user.Projects)
-            {
-                context.Projects.Remove(p);
-            }
 
+            var userProjects = context.UserProjects.Where(x => x.UserId == id);
+            context.UserProjects.RemoveRange(userProjects);
+
+            var authorProjects = context.Projects.Where(x => x.Author.Id == user.Id);
+            context.Projects.RemoveRange(authorProjects);
 
             await context.SaveChangesAsync();
+
             await userManager.DeleteAsync(user);
-            */
+
             return RedirectToAction("Index");
             
 

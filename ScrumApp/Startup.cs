@@ -100,7 +100,8 @@ namespace ScrumApp
             AppUser admin = new AppUser
             {
                 Email = "williamganrot@hotmail.com",
-                UserName = "admin"
+                UserName = "admin",
+                UserNameSlug = "admin"
             };
 
             string pass = "Admin_1";

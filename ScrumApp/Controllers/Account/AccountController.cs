@@ -35,7 +35,8 @@ namespace ScrumApp.Controllers.Account
                 AppUser appUser = new AppUser
                 {
                     Email = userRegister.Email,
-                    UserName = userRegister.UserName
+                    UserName = userRegister.UserName,
+                    UserNameSlug = userRegister.UserName.ToLower().Replace(" ", "-")
                 };
 
                 IdentityResult result = await userManager.CreateAsync(appUser, userRegister.Password);
