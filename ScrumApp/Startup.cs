@@ -34,6 +34,8 @@ namespace ScrumApp
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScrumApplicationContext>()
                 .AddDefaultTokenProviders();
+            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,9 +67,19 @@ namespace ScrumApp
                 );
 
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                        name: "default",
+                        pattern: "{userSlug}/{projectSlug}",
+                        defaults: new { controller = "Projects", action = "test" }
                 );
+
+                endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Projects}/{action=Index}/{id?}",
+                        defaults: new { controller = "Projects" }
+                );
+
+
+
             });
             CreateAdminRole(serviceProvider);
             CreateAdminUserAsync(serviceProvider);

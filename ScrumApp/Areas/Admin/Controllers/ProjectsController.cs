@@ -25,8 +25,9 @@ namespace ScrumApp.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            var projects = context.Projects.Include(x => x.Author);
-            return View(projects);
+                var projects = context.Projects.Include(x => x.Author);
+                return View(projects);
+
         }
 
         public IActionResult Details(int id)

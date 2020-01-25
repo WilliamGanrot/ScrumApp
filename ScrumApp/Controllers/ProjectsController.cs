@@ -24,19 +24,25 @@ namespace ScrumApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            var projects = context.UserProjects
-                .Where(x => x.AppUser.Id == user.Id)
-                .Include(x => x.Project.Author)
-                .Select(x => x.Project)
-                .ToList();
-
-            foreach(var project in projects)
+            if (User.Identity.IsAuthenticated)
             {
-                
+                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+                var projects = context.UserProjects
+                    .Where(x => x.AppUser.Id == user.Id)
+                    .Include(x => x.Project.Author)
+                    .Select(x => x.Project)
+                    .ToList();
+
+                return View(projects);
             }
-            return View(projects);
+            else
+            {
+                return View("~/Views/Home/Index.cshtml");
+            }
+
+
         }
 
 
@@ -129,6 +135,42 @@ namespace ScrumApp.Controllers
             context.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        
+        public async Task<string> test(string userSlug, string projectSlug)
+        {
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+           
+            //check if the user exists
+            AppUser projectOwner = context.Users
+                .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
+                .FirstOrDefault();
+            if (projectOwner == null)
+                return "Could not find user";
+
+            //check if the projects exists
+            var project = context.Projects
+                .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
+                .Where(x => x.Author == projectOwner)
+                .FirstOrDefault();
+            if (project == null)
+                return "could not find project";
+
+            //check if logged in user is a member of the project
+            //GIVES ERROR
+            var result = context.UserProjects
+                .Where(x => x.AppUser == user)
+                .Where(x => x.ProjectId == project.ProjectId)
+                .FirstOrDefault();
+
+            if(result == null)
+                return "the user is not a member in the project";
+
+
+            return "You are now inside the project: " + project.ProjectName;
+            
+
         }
     }
 }
