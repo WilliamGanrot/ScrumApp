@@ -137,7 +137,7 @@ namespace ScrumApp.Controllers
             return RedirectToAction("Index");
         }
 
-        
+
         public async Task<string> test(string userSlug, string projectSlug)
         {
             AppUser user = await userManager.GetUserAsync(HttpContext.User);

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    partial class ScrumApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200126154656_BoardToContext")]
+    partial class BoardToContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,12 +230,7 @@ namespace ScrumApp.Migrations
                     b.Property<string>("BoardName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
                     b.HasKey("BoardId");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Boards");
                 });
@@ -325,15 +322,6 @@ namespace ScrumApp.Migrations
                     b.HasOne("ScrumApp.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ScrumApp.Models.Board", b =>
-                {
-                    b.HasOne("ScrumApp.Models.Project", "Project")
-                        .WithMany("Boards")
-                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

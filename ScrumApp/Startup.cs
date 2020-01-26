@@ -34,7 +34,7 @@ namespace ScrumApp
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScrumApplicationContext>()
                 .AddDefaultTokenProviders();
-            
+
 
         }
 
@@ -68,8 +68,8 @@ namespace ScrumApp
 
                 endpoints.MapControllerRoute(
                         name: "default",
-                        pattern: "{userSlug}/{projectSlug}",
-                        defaults: new { controller = "Projects", action = "test" }
+                        pattern: "{userSlug}/{projectSlug}/{action}",
+                        defaults: new { controller = "Board", action = "Index" }
                 );
 
                 endpoints.MapControllerRoute(
