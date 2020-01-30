@@ -137,7 +137,7 @@ namespace ScrumApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Invite()
+        public IActionResult     Invite()
         {
 
             return View();

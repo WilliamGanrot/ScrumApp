@@ -20,16 +20,29 @@ namespace ScrumApp.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string userSlug, string projectSlug)
         {
+            //System.Diagnostics.Debug.WriteLine("u: " + userSlug + " p: " + projectSlug);
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Invite(ProjectInvitation projectInvitation)
+        public async Task<IActionResult> Invite(string userSlug, string projectSlug, ProjectInvitation projectInvitation)
         {
-            System.Diagnostics.Debug.WriteLine(projectInvitation.token);
-            return Ok();
+            //the project id with the author {userSlug} and the project {projectSlug}
+            AppUser projectOwner = context.Users
+                .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
+                .FirstOrDefault();
+
+            var project = context.Projects
+                .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
+                .Where(x => x.Author == projectOwner)
+                .FirstOrDefault();
+
+            var projectId = project.ProjectId;
+            System.Diagnostics.Debug.WriteLine(projectId);
+
+            return RedirectToAction("Index");
         }
     }
 }
