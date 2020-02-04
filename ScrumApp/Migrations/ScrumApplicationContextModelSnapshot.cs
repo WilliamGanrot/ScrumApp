@@ -263,6 +263,22 @@ namespace ScrumApp.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("ScrumApp.Models.ProjectInvitation", b =>
+                {
+                    b.Property<string>("token")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("token");
+
+                    b.ToTable("ProjectInvitations");
+                });
+
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
                 {
                     b.Property<int>("ProjectId")

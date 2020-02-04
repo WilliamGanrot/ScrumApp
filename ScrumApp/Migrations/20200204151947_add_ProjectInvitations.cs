@@ -2,28 +2,28 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class BoardToContext : Migration
+    public partial class add_ProjectInvitations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Boards",
+                name: "ProjectInvitations",
                 columns: table => new
                 {
-                    BoardId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BoardName = table.Column<string>(nullable: true)
+                    token = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Boards", x => x.BoardId);
+                    table.PrimaryKey("PK_ProjectInvitations", x => x.token);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Boards");
+                name: "ProjectInvitations");
         }
     }
 }

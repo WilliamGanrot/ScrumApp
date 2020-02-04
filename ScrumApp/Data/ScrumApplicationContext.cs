@@ -34,7 +34,9 @@ namespace ScrumApp.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<UserProject> UserProjects { get; set; }
         public DbSet<Board> Boards { get; set; }
-        //public DbSet<AppUser> AppUsers { get; set; }
+
+        public DbSet<ProjectInvitation> ProjectInvitations { get; set; }
+
 
     }
 
