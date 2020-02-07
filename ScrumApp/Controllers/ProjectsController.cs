@@ -112,42 +112,5 @@ namespace ScrumApp.Controllers
             return RedirectToAction("Index");
         }
 
-
-        public IActionResult Join()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Join(JoinProject joinProject)
-        {
-            Project project = await context.Projects.FindAsync(joinProject.ProjectId);
-            AppUser user = await userManager.GetUserAsync(HttpContext.User);
-
-            UserProject userProject = new UserProject
-            {
-                AppUser = user,
-                Project = project
-            };
-           
-            project.UserProjects = new List<UserProject> { userProject };
-
-            context.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult     Invite()
-        {
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Invite(string test)
-        {
-            System.Diagnostics.Debug.WriteLine(test);
-            return Ok();
-        }
     }
 }

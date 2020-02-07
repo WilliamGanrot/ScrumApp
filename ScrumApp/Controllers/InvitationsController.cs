@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
 using ScrumApp.Data;
 using ScrumApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ScrumApp.Controllers
 {
+    [Authorize]
     public class InvitationsController : Controller
     {
         private readonly ScrumApplicationContext context;
@@ -22,7 +28,6 @@ namespace ScrumApp.Controllers
 
         public IActionResult Index(string userSlug, string projectSlug)
         {
-            //System.Diagnostics.Debug.WriteLine("u: " + userSlug + " p: " + projectSlug);
             return View();
         }
 
@@ -34,13 +39,6 @@ namespace ScrumApp.Controllers
 
             if (ModelState.IsValid)
             {
-
-                /*
-                    TO DO
-                    1. Make sure the email gets sent, not only generate the url 
-
-                */
-                //the project id with the author {userSlug} and the project {projectSlug}
                 AppUser projectOwner = context.Users
                     .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
                     .FirstOrDefault();
@@ -57,18 +55,25 @@ namespace ScrumApp.Controllers
                 }
                 var projectId = project.ProjectId;
 
-
-                //the user being invited
                 AppUser invitedUser = await userManager.FindByIdAsync(projectInvitation.UserId);
                 if (invitedUser == null)
                 {
-                    System.Diagnostics.Debug.WriteLine("the user wasn't found");
+                    TempData["Error"] = "The user doesn't exist";
+                    return RedirectToAction("Index");
+                }
+
+                var allreadyMemberresult = context.UserProjects
+                    .Where(x => x.UserId == invitedUser.Id)
+                    .Where(x => x.ProjectId == projectId)
+                    .FirstOrDefault();
+
+                if (allreadyMemberresult != null)
+                {
+                    TempData["Error"] = "The user is allready a part of the project";
                     return RedirectToAction("Index");
                 }
 
 
-
-                // Check if the user allready has been invited
                 var result = context.ProjectInvitations
                     .Where(x => x.UserId == invitedUser.Id)
                     .Where(x => x.ProjectId == projectId)
@@ -76,13 +81,11 @@ namespace ScrumApp.Controllers
 
                 if (result != null)
                 {
-                    //The user has allready been invited
-                    //return to view with an inforamtive message
-                    System.Diagnostics.Debug.WriteLine("user has allready been invited");
+                    TempData["Error"] = "The user has allready been invited";
                     return RedirectToAction("Index");
                 }
 
-                //the token
+
                 var token = await userManager.GenerateUserTokenAsync(invitedUser, "Default", "ProjectInvitation");
 
                 projectInvitation.UserId = invitedUser.Id;
@@ -96,6 +99,33 @@ namespace ScrumApp.Controllers
                 context.ProjectInvitations.Add(projectInvitation);
                 await context.SaveChangesAsync();
 
+                /*
+                SEND EMAIL
+                */
+
+                var message = new MimeMessage();
+
+                message.From.Add(new MailboxAddress("Easy Scrum", "easyscrumhelper@gmail.com"));
+
+                message.To.Add(new MailboxAddress(invitedUser.UserName, invitedUser.Email));
+
+                message.Subject = "You have been invited to a project";
+                message.Body = new TextPart("plain")
+                {
+                    Text = "this is the invitation project, click here to accept: " + confirmationLink
+                };
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 465, true);
+
+                    client.Authenticate("easyscrumhelper@gmail.com", "Admin_123");
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+                TempData["Success"] = "An invatation has been sent to " + invitedUser.Email;
                 return RedirectToAction("Index");
             }
             else
@@ -117,34 +147,39 @@ namespace ScrumApp.Controllers
         public async Task<IActionResult> ConfirmInvitation(string token)
         {
 
-            /*
-                TO DO
-                1. Split up th function in to a get and a post method
-                2. make sure that the user is authenticated before the user gets added 
-                3. make sure user is a valid user
-                4. make sure user isn't allready invited or is a member of the project
-
-            */
             //add user as a member to the project
             ProjectInvitation invitation = context.ProjectInvitations.Find(token);
-
-            Project project = await context.Projects.FindAsync(invitation.ProjectId);
-            AppUser user = await userManager.FindByIdAsync(invitation.UserId);
-
-            UserProject userProject = new UserProject
+            if (invitation == null)
             {
-                AppUser = user,
-                Project = project
-            };
+                TempData["Error"] = "This invitation is no longer valid, or you are allready a member of the project";
+                return Redirect("/");
+            }
 
-            project.UserProjects = new List<UserProject> { userProject };
-
-            //remove invitation from the context
-            context.ProjectInvitations.Remove(invitation);
+            AppUser user = await userManager.FindByIdAsync(invitation.UserId);
+            Project project = await context.Projects.FindAsync(invitation.ProjectId);
             
-            context.SaveChanges();
+            if(await userManager.GetUserAsync(HttpContext.User) == user)
+            {
+                System.Diagnostics.Debug.WriteLine("allowed user");
+                UserProject userProject = new UserProject
+                {
+                    AppUser = user,
+                    Project = project
+                };
 
-            return RedirectToAction("Projects", "Index");
+                project.UserProjects = new List<UserProject> { userProject };
+
+                //remove invitation from the context
+                context.ProjectInvitations.Remove(invitation);
+                context.SaveChanges();
+
+                return Redirect("/");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("not allowed user");
+                return Unauthorized();
+            }
         }
 
 
