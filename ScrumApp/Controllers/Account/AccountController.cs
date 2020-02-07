@@ -57,12 +57,12 @@ namespace ScrumApp.Controllers.Account
         }
 
         [AllowAnonymous]
-        public IActionResult Login() => View();
+        public IActionResult Login(string returnUrl) => View();
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserLogin userLogin, string ReturnUrl)
+        public async Task<IActionResult> Login(UserLogin userLogin, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -72,17 +72,15 @@ namespace ScrumApp.Controllers.Account
                     var result = await signInManager.PasswordSignInAsync(appUser, userLogin.Password, false, false);
                     if (result.Succeeded)
                     {
-                        if (!string.IsNullOrEmpty(ReturnUrl))
+                        if (!string.IsNullOrEmpty(returnUrl))
                         {
-                            return Redirect(ReturnUrl);
+                            return Redirect(returnUrl);
                         }
                         return RedirectToAction("index", "home");
                     }
                     ModelState.AddModelError("", "Login failed, wrong username or password");
                 }
-
             }
-
             return View(userLogin);
         }
 

@@ -146,7 +146,7 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> ConfirmInvitation(string token)
         {
-
+            System.Diagnostics.Debug.WriteLine("Back here");
             //add user as a member to the project
             ProjectInvitation invitation = context.ProjectInvitations.Find(token);
             if (invitation == null)
@@ -160,7 +160,6 @@ namespace ScrumApp.Controllers
             
             if(await userManager.GetUserAsync(HttpContext.User) == user)
             {
-                System.Diagnostics.Debug.WriteLine("allowed user");
                 UserProject userProject = new UserProject
                 {
                     AppUser = user,
