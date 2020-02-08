@@ -4,43 +4,31 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Projects</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+    <table class="table">
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="c1 inTable">
+                        <a asp-route-userSlug="@item.Author.UserName" asp-route-projectSlug="@item.Slug" asp-controller="Board">@item.Author.UserName / @item.ProjectName</a>
+                    </td>
+                    <td class="text-right">
+                        <a asp-action="Remove" asp-route-id="@item.ProjectId">Delete</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a>
+                    </td>
+                </tr>
+            }
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectName)
-            </th>
-            <th>Author</th>
-            <th></th>
+            <td class="c1">
+                <a asp-action="Create"><span class="fas fa-plus"></span>   Add Project</a>
+            </td>
+            <td></td>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.UserName)
-            </td>
-            <td>
-                <a asp-action="Remove" asp-route-id="@item.ProjectId">Delete</a> |
-                <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+
+    </table>
+
 
