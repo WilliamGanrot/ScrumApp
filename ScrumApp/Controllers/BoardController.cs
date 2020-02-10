@@ -37,10 +37,10 @@ namespace ScrumApp.Controllers
                 .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
                 .Where(x => x.Author == projectOwner)
                 .FirstOrDefault();
-            /*
+            
             if (project == null)
-                return "could not find project";
-            */
+                return NotFound();
+
             //check if logged in user is a member of the project
             //GIVES ERROR
             var result = context.UserProjects
@@ -55,9 +55,27 @@ namespace ScrumApp.Controllers
             return View(context.Boards);
         }
 
-        public string test()
+        public async Task<IActionResult> Create()
         {
-            return "hej hej";
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(string userSlug, string projectSlug)
+        {
+            if (ModelState.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine(userSlug + " " + projectSlug);
+
+            }
+
+            return View();
+        }
+
+
+        public string Specific(string boardSlug)
+        {
+            return boardSlug;
         }
     }
 }

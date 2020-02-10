@@ -67,11 +67,26 @@ namespace ScrumApp
                 );
 
                 endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{userSlug}/{projectSlug}/{controller}/{action}",
-                        defaults: new { controller = "Board", action = "Index" }
+                    name: "default",
+                    pattern: "{userSlug}/{projectSlug}/{controller}/{action}",
+                    defaults: new { controller = "Board", action = "Index" }
                 );
+                endpoints.MapControllerRoute(
+                    name: "default2",
+                    pattern: "{userSlug}/{projectSlug}/{boardSlug}",
+                    defaults: new { controller = "Board", action = "Specific" }
+                );
+                /*
 
+                */
+
+                /*
+                endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{userSlug}/{projectSlug}/{controller}/{boardSlug}",
+                        defaults: new { controller = "Board", action = "test" }
+                );
+                */
                 endpoints.MapControllerRoute(
                         name: "default",
                         pattern: "{controller=Projects}/{action=Index}/{id?}",
