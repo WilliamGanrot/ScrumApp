@@ -8,6 +8,7 @@ namespace ScrumApp.Models
     public class Board
     {
         public string BoardName { get; set; }
+        public string BoardSlug { get; set; }
         public int BoardId { get; set; }
 
         public int ProjectId { get; set; }
