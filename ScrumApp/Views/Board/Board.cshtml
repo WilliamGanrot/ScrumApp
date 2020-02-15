@@ -7,26 +7,18 @@
     <head>
 
         <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content= ="IE=edge" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="google" value="notranslate" />
         <title>Side Menu</title>
 
         <link rel="stylesheet" type="text/css" href="css/menu.css">
-        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
-              rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
     </head>
 
 
 <div class="view-content">
-    All sub Boards are:
-    @foreach (var board in ViewBag.boards)
-    {
-        @board.BoardName
-        <br />
-    }
-    List all sub boards for @Model.BoardName
-
+    <p>Board: @Model.BoardName</p>
 </div>
 
 
@@ -49,7 +41,7 @@
                     </li>
                     }
                     <li class="nav-item">
-                        <a id="create-board" asp-action="Create"><span class="fas fa-plus"></span>   Add Project</a>
+                        <a id="create-board" asp-action="Create"><span class="fas fa-plus"></span>   Add Board</a>
                     </li>
                 </ul>
             </div>

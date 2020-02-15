@@ -180,9 +180,10 @@ namespace ScrumApp.Controllers
             var boards = context.Boards
                .Where(x => x.Project == project);
 
-            Board currentBoard = boards.OrderByDescending(p => p.BoardId).FirstOrDefault();
+            Board currentBoard = boards
+                .Where(x => x.BoardSlug == boardSlug)
+                .FirstOrDefault();
 
-            //temp
             var b = context.Boards.FirstOrDefault();
 
             ViewBag.boards = boards;
