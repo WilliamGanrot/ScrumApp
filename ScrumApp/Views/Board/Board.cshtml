@@ -1,0 +1,58 @@
+﻿@model ScrumApp.Models.Board
+
+@{
+    ViewData["Title"] = "Board";
+}
+
+    <head>
+
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content= ="IE=edge" />
+        <meta name="google" value="notranslate" />
+        <title>Side Menu</title>
+
+        <link rel="stylesheet" type="text/css" href="css/menu.css">
+        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+              rel="stylesheet">
+
+    </head>
+
+
+<div class="view-content">
+    All sub Boards are:
+    @foreach (var board in ViewBag.boards)
+    {
+        @board.BoardName
+        <br />
+    }
+    List all sub boards for @Model.BoardName
+
+</div>
+
+
+@section outOfContainer{
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 second-nav" >
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+
+                <ul class="navbar-nav flex-grow-1">
+
+                    @foreach (var board in ViewBag.boards)
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark"  asp-route-userSlug="@board.Project.Author.UserName" asp-route-projectSlug="@board.Project.Slug" asp-route-boardSlug="@board.BoardSlug">@board.BoardName</a>
+                    </li>
+                    }
+                    <li class="nav-item">
+                        <a id="create-board" asp-action="Create"><span class="fas fa-plus"></span>   Add Project</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+}

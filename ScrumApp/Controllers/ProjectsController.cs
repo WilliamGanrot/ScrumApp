@@ -105,9 +105,9 @@ namespace ScrumApp.Controllers
 
             Project userProject = await context.Projects.FindAsync(id);
 
-
             context.Projects.Remove(userProject);
             await context.SaveChangesAsync();
+
 
             return RedirectToAction("Index");
         }

@@ -69,10 +69,18 @@ namespace ScrumApp.Controllers
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("View latest board");
+                var latestBoard = boards.OrderByDescending(p => p.BoardId).FirstOrDefault();
+                string latestBoardSlug = latestBoard.BoardName.ToLower().Replace(" ", "-");
+
+
+                //This url will trigger the action Board-action
+                var url = "https://localhost:44388/" + project.Author.UserNameSlug + "/" + project.Slug + "/" + latestBoardSlug;
+                return Redirect(url);
+                //return RedirectToAction("Index", new { userSlug = projectOwner.UserNameSlug, projectSlug = project.Slug, boardSlug = latestBoardSlug });
+
             }
 
-            return View(boards);
+            return View(project);
         }
 
         public IActionResult Create()
@@ -131,16 +139,54 @@ namespace ScrumApp.Controllers
                 await context.Boards.AddAsync(board);
                 context.SaveChanges();
 
-                return RedirectToAction("Index", new { userSlug = projectOwner.UserNameSlug, projectSlug = project.Slug});
+                return RedirectToAction("Index");
             }
 
             return View();
         }
 
 
-        public string Specific(string boardSlug)
+        public async Task<IActionResult> Board(string userSlug, string projectSlug, string boardSlug)
         {
-            return boardSlug;
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+            //check if the user exists
+            AppUser projectOwner = context.Users
+                .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
+                .FirstOrDefault();
+
+            //if (projectOwner == null)
+            //    return "Could not find user";
+
+            //check if the projects exists
+            var project = context.Projects
+                .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
+                .Where(x => x.Author == projectOwner)
+                .FirstOrDefault();
+
+            if (project == null)
+                return NotFound();
+
+            //check if logged in user is a member of the project
+            //GIVES ERROR
+            var result = context.UserProjects
+                .Where(x => x.AppUser == user)
+                .Where(x => x.ProjectId == project.ProjectId)
+                .FirstOrDefault();
+
+            if (result == null)
+                return NotFound();
+
+            var boards = context.Boards
+               .Where(x => x.Project == project);
+
+            Board currentBoard = boards.OrderByDescending(p => p.BoardId).FirstOrDefault();
+
+            //temp
+            var b = context.Boards.FirstOrDefault();
+
+            ViewBag.boards = boards;
+            return View(currentBoard);
         }
     }
 }

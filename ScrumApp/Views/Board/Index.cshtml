@@ -1,43 +1,9 @@
-﻿@model IEnumerable<ScrumApp.Models.Board>
-
+﻿@model ScrumApp.Models.Project
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-controller="Invitations" asp-action="Index">Invite</a>
-</p>
-
-<a></a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BoardName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BoardId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-route-userSlug="@item.BoardSlug">@item.BoardName</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BoardId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="text-center">
+    <h1 class="display-4">No Boards</h1>
+    <p>To create a board click <a asp-route-userSlug="@Model.Author.UserName" asp-route-projectSlug="@Model.Slug" asp-controller="Board" asp-action="Create">here</a></p>
+</div>

@@ -66,19 +66,25 @@ namespace ScrumApp
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
 
+
+                endpoints.MapControllerRoute(
+                    name: "default2",
+                     pattern: "{userSlug}/{projectSlug}/{boardSlug}",
+                    //pattern: "{userSlug}/{projectSlug}/{boardSlug}/{controller}/{action}",
+                    defaults: new { controller = "Board", action = "Board" }
+                );
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{userSlug}/{projectSlug}/{controller}/{action}",
                     defaults: new { controller = "Board", action = "Index" }
                 );
                 endpoints.MapControllerRoute(
-                    name: "default2",
-                    pattern: "{userSlug}/{projectSlug}/{boardSlug}",
-                    defaults: new { controller = "Board", action = "Specific" }
+                        name: "default",
+                        pattern: "{controller=Projects}/{action=Index}/{id?}",
+                        defaults: new { controller = "Projects" }
                 );
-                /*
 
-                */
+
 
                 /*
                 endpoints.MapControllerRoute(
@@ -87,11 +93,7 @@ namespace ScrumApp
                         defaults: new { controller = "Board", action = "test" }
                 );
                 */
-                endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Projects}/{action=Index}/{id?}",
-                        defaults: new { controller = "Projects" }
-                );
+
 
 
 

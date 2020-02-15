@@ -82,3 +82,18 @@ td.c1 {
 td.c1.inTable a{
     color:#212529;
 }
+
+.second-nav {
+    margin-top: -1rem !important;
+
+}
+.second-nav a {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+#create-board {
+    color: #343a40 !important;
+    padding-left: 20px;
+    font-weight: 600;
+}
