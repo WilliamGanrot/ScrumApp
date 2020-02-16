@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ScrumApp.Data;
 using ScrumApp.Models;
 
@@ -179,12 +180,12 @@ namespace ScrumApp.Controllers
 
             var boards = context.Boards
                .Where(x => x.Project == project);
+            
 
             Board currentBoard = boards
                 .Where(x => x.BoardSlug == boardSlug)
+                .Include(x => x.BoardColumns)
                 .FirstOrDefault();
-
-            var b = context.Boards.FirstOrDefault();
 
             ViewBag.boards = boards;
             return View(currentBoard);

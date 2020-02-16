@@ -10,16 +10,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="google" value="notranslate" />
         <title>Side Menu</title>
-
-        <link rel="stylesheet" type="text/css" href="css/menu.css">
         <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
     </head>
 
 
-<div class="view-content">
-    <p>Board: @Model.BoardName</p>
-</div>
+    <div class="view-content">
+
+        @foreach (var boardColumn in Model.BoardColumns)
+        {
+            @boardColumn.BoardColumnName
+            <br />
+        }
+
+    </div>
 
 
 @section outOfContainer{
@@ -48,3 +52,4 @@
         </div>
     </nav>
 }
+
