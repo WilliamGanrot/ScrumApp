@@ -51,11 +51,11 @@
 
             <div class="col-3 mb-4">
                 <div class="card h-100">
-                    <div class="card-header">
+                    <div class="card-header" style="font-weight:600;">
                         @boardColumn.BoardColumnName
                     </div>
                     <div class="card-body">
-
+                        <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>
                     </div>
                 </div>
             </div>
