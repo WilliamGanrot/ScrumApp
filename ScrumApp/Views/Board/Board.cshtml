@@ -44,14 +44,14 @@
 }
 
 <div class="view-content full-height">
-    <div class="row no-stack full-height">
+    <div class="row no-stack full-height" id="sortable">
         @foreach (var boardColumn in Model.BoardColumns)
         {
 
 
-            <div class="col-3 mb-4">
+            <div class="col-3 mb-4" id="draggable">
                 <div class="card h-100">
-                    <div class="card-header" style="font-weight:600;">
+                    <div class="card-header" style="font-weight:600;" >
                         @boardColumn.BoardColumnName
                     </div>
                     <div class="card-body">
@@ -60,11 +60,22 @@
                 </div>
             </div>
         }
-    <div class="col-2 mb-2">
-        <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
-    </div>
+        <div class="col-2 mb-2" id="add-col">
+            <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
+        </div>
     </div>
 
 </div>
 
 
+@section Scripts{
+    <script>
+        $(function () {
+            $("#sortable").sortable({
+                items: "#draggable:not(#add-col)",
+                handle: '.card-header',
+                revert: true
+            });
+        });
+    </script>
+}
