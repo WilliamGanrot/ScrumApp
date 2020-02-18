@@ -93,5 +93,21 @@ namespace ScrumApp.Controllers
 
             return RedirectToAction("Index", "Board");
         }
+
+        [HttpPost]
+        public IActionResult reorder(int id, int[] vals)
+        {
+            int boardId = id;
+            int[] columnsId = vals;
+
+            System.Diagnostics.Debug.WriteLine(boardId);
+            System.Diagnostics.Debug.WriteLine("");
+            foreach (var valid in columnsId)
+            {
+                System.Diagnostics.Debug.Write(valid);
+                System.Diagnostics.Debug.WriteLine("");
+            }
+            return Ok();
+        }
     }
 }
