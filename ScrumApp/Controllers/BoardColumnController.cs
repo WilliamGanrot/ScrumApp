@@ -85,6 +85,7 @@ namespace ScrumApp.Controllers
 
                 boardColumn.BoardColumnSlug = slug;
                 boardColumn.Board = currentBoard;
+                boardColumn.BoardColumnSorting = 100;
 
                 await context.BoardColumns.AddAsync(boardColumn);
                 context.SaveChanges();
@@ -95,17 +96,22 @@ namespace ScrumApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult reorder(int id, int[] vals)
+        public async Task<IActionResult> reorder(int id, int[] vals)
         {
             int boardId = id;
             int[] columnsId = vals;
 
-            System.Diagnostics.Debug.WriteLine(boardId);
-            System.Diagnostics.Debug.WriteLine("");
+            int newSorting = 1;
+
             foreach (var valid in columnsId)
             {
-                System.Diagnostics.Debug.Write(valid);
-                System.Diagnostics.Debug.WriteLine("");
+                var column = await context.BoardColumns.FindAsync(valid);
+                column.BoardColumnSorting = newSorting;
+
+                context.BoardColumns.Update(column);
+                await context.SaveChangesAsync();
+
+                newSorting += 1;
             }
             return Ok();
         }

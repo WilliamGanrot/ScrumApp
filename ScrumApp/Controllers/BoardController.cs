@@ -180,12 +180,17 @@ namespace ScrumApp.Controllers
 
             var boards = context.Boards
                .Where(x => x.Project == project);
-            
+                
+            if (boards == null)
+                return NotFound();
 
             Board currentBoard = boards
                 .Where(x => x.BoardSlug == boardSlug)
                 .Include(x => x.BoardColumns)
                 .FirstOrDefault();
+            
+            //order the columns in the boardview after sorting
+            currentBoard.BoardColumns = currentBoard.BoardColumns.OrderBy(c => c.BoardColumnSorting).ToList();
 
             ViewBag.boards = boards;
             return View(currentBoard);
