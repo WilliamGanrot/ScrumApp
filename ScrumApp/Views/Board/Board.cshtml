@@ -56,8 +56,14 @@
                     </div>
                     <div class="card-body">
                         <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>
-                    </div>
+                        <p id="load_@boardColumn.BoardColumnId">toggle</p>
+                        <div class="hide" id="view_@boardColumn.BoardColumnId">
+                            <partial name="_ColumnFormPartial" model="boardColumn"></partial>
+                        </div>
+                           
 
+                        </div>
+                    
                 </div>
             </div>
         }
@@ -96,6 +102,22 @@
             }
         });
 
+        $('.card-body p').click(function (evt) {
+
+            id = evt.target.id.slice(5)
+            view_id = "view_" + id;
+            console.log(view_id);
+
+
+            if ($("#" + view_id).hasClass("hide")) {
+               $("#" + view_id).removeClass("hide")
+            }
+            else {
+                 $("#" + view_id).addClass("hide")
+                
+            }
+
+        });
 
     </script>
 }

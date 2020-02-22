@@ -28,5 +28,22 @@ namespace ScrumApp.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Story story, string userSlug, string projectSlug, string boardSlug)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+            }
+
+
+            System.Diagnostics.Debug.WriteLine("story name: ", story.StoryTitle);
+            System.Diagnostics.Debug.WriteLine(userSlug);
+            System.Diagnostics.Debug.WriteLine(projectSlug);
+            System.Diagnostics.Debug.WriteLine(boardSlug);
+            return Ok();
+        }
     }
 }
