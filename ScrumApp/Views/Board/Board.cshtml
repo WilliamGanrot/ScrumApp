@@ -55,10 +55,10 @@
                         @boardColumn.BoardColumnName
                     </div>
                     <div class="card-body">
-                        <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>
-                        <p id="load_@boardColumn.BoardColumnId">toggle</p>
+                        <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
+                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer" ><span class="fas fa-plus"></span>   Add Story</a>
                         <div class="hide" id="view_@boardColumn.BoardColumnId">
-                            <partial name="_ColumnFormPartial" model="boardColumn"></partial>
+                            <partial name="_ColumnFormPartial" model="boardColumn">
                         </div>
                            
 
@@ -102,22 +102,36 @@
             }
         });
 
-        $('.card-body p').click(function (evt) {
-
-            id = evt.target.id.slice(5)
+        $('.card-body .open').click(function (evt) {
+            load_id = evt.target.id;
+            id = load_id.slice(5)
             view_id = "view_" + id;
             console.log(view_id);
 
 
             if ($("#" + view_id).hasClass("hide")) {
-               $("#" + view_id).removeClass("hide")
+                $("#" + view_id).removeClass("hide")
+                $("#" + load_id).addClass("hide")
             }
             else {
-                 $("#" + view_id).addClass("hide")
+                $("#" + view_id).addClass("hide")
+                $("#" + load_id).removeClass("hide")
                 
             }
 
         });
 
+        $('.form-group a').click(function (evt) {
+            close_form_id = evt.target.id;
+            id = close_form_id.slice(11);
+
+
+            view_id = "view_" + id;
+            load_id = "load_" + id;
+
+            $("#" + view_id).addClass("hide");
+            $("#" + load_id).removeClass("hide");
+
+        });
     </script>
 }
