@@ -19,15 +19,7 @@ namespace ScrumApp.Controllers
             this.context = context;
             this.userManager = userManager;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateStory createStory, string userSlug, string projectSlug, string boardSlug)
@@ -43,13 +35,14 @@ namespace ScrumApp.Controllers
                     BoardColumn = context.BoardColumns.Find(createStory.BoardColumnId)
                 };
 
-                System.Diagnostics.Debug.WriteLine("Id: " + story.BoardColumn.BoardColumnName);
-                System.Diagnostics.Debug.WriteLine("Title: " + story.StoryTitle);
+                await context.Stories.AddAsync(story);
+                context.SaveChanges();
+
+                
 
             }
 
-
-            return Ok();
+            return RedirectToAction("Index", "Board");
         }
     }
 }

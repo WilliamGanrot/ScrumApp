@@ -187,8 +187,11 @@ namespace ScrumApp.Controllers
             Board currentBoard = boards
                 .Where(x => x.BoardSlug == boardSlug)
                 .Include(x => x.BoardColumns)
+                .ThenInclude(column => column.Stories)
                 .FirstOrDefault();
             
+
+
             //order the columns in the boardview after sorting
             currentBoard.BoardColumns = currentBoard.BoardColumns.OrderBy(c => c.BoardColumnSorting).ToList();
 
