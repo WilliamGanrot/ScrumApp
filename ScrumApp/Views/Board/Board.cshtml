@@ -58,7 +58,7 @@
                         <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
                         <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer" ><span class="fas fa-plus"></span>   Add Story</a>
                         <div class="hide" id="view_@boardColumn.BoardColumnId">
-                            <partial name="_StoryFormPartial" model='new Story { BoardColumnId = @boardColumn.BoardColumnId, StoryTitle = "hej william"}' >
+                            <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}' >
 
                            </div>
                            

@@ -30,23 +30,25 @@ namespace ScrumApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Story story, string userSlug, string projectSlug, string boardSlug)
+        public async Task<IActionResult> Create(CreateStory createStory, string userSlug, string projectSlug, string boardSlug)
         {
 
             if (ModelState.IsValid)
             {
+                //This item should be added to database
+                Story story = new Story
+                {
+                    StoryTitle = createStory.StoryTitle,
+                    StorySlug = createStory.StoryTitle.ToLower().Replace(" ", "-"),
+                    BoardColumn = context.BoardColumns.Find(createStory.BoardColumnId)
+                };
+
+                System.Diagnostics.Debug.WriteLine("Id: " + story.BoardColumn.BoardColumnName);
+                System.Diagnostics.Debug.WriteLine("Title: " + story.StoryTitle);
 
             }
 
-            if(story == null)
-            {
-                System.Diagnostics.Debug.WriteLine("story is null");
-            }
 
-            System.Diagnostics.Debug.WriteLine("Id: " + story.BoardColumnId);
-            System.Diagnostics.Debug.WriteLine(userSlug);
-            System.Diagnostics.Debug.WriteLine(projectSlug);
-            System.Diagnostics.Debug.WriteLine(boardSlug);
             return Ok();
         }
     }
