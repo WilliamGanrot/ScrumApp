@@ -38,8 +38,12 @@ namespace ScrumApp.Controllers
 
             }
 
+            if(story == null)
+            {
+                System.Diagnostics.Debug.WriteLine("story is null");
+            }
 
-            System.Diagnostics.Debug.WriteLine("story name: ", story.StoryTitle);
+            System.Diagnostics.Debug.WriteLine("Id: " + story.BoardColumnId);
             System.Diagnostics.Debug.WriteLine(userSlug);
             System.Diagnostics.Debug.WriteLine(projectSlug);
             System.Diagnostics.Debug.WriteLine(boardSlug);

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    partial class ScrumApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200223081202_Story-get-column-id")]
+    partial class Storygetcolumnid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,7 +317,10 @@ namespace ScrumApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BoardColumnId")
+                    b.Property<int>("BoarColumnId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BoardColumnId")
                         .HasColumnType("int");
 
                     b.Property<string>("StorySlug")
@@ -426,9 +431,7 @@ namespace ScrumApp.Migrations
                 {
                     b.HasOne("ScrumApp.Models.BoardColumn", "BoardColumn")
                         .WithMany("Stories")
-                        .HasForeignKey("BoardColumnId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BoardColumnId");
                 });
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
