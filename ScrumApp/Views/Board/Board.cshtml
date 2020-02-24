@@ -54,17 +54,28 @@
                     <div class="card-header" style="font-weight:600;" id="draggable">
                         @boardColumn.BoardColumnName
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="overflow-y:auto;">
                         <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
                         <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add Story</a>
                         <div class="hide" id="view_@boardColumn.BoardColumnId">
                             <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
 
                         </div>
-                        @foreach (var x in boardColumn.Stories)
-                        {
-                            <p>@x.StoryTitle</p>
-                        }
+                        <div style="margin-top:1.25rem" class="story-list">
+                            @foreach (var x in boardColumn.Stories)
+                            {
+                                <div class="col-sm-12" style="padding:0;margin-bottom:1.25rem">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@x.StoryTitle</h5>
+                                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                        </div>
+                                    </div>
+                                </div>
+   
+                            }
+
+                        </div>
 
                     </div>
                     

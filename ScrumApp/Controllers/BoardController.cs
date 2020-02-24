@@ -185,8 +185,8 @@ namespace ScrumApp.Controllers
                 return NotFound();
 
             Board currentBoard = boards
-                .Where(x => x.BoardSlug == boardSlug)
-                .Include(x => x.BoardColumns)
+                .Where(board => board.BoardSlug == boardSlug)
+                .Include(board => board.BoardColumns)
                 .ThenInclude(column => column.Stories)
                 .FirstOrDefault();
             

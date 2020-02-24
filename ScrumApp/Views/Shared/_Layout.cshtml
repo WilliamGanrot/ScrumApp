@@ -58,17 +58,12 @@
             </nav>
         </header>
         @RenderSection("outOfContainer", required: false)
-        <div class="container-fluid" style="height:82%">
+        <div class="container-fluid" style="height:88%">
             <main role="main" class="pb-3 full-height">
                 <partial name="_NotificationPartial" />
                 @RenderBody()
             </main>
         </div>
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2020 - ScrumApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>
     </div>
 
 
