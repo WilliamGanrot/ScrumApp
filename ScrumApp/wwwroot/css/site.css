@@ -110,19 +110,18 @@ td.c1.inTable a{
 
 
 
+
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    border-radius: 5px;
-    background-color: #F5F5F5;
+    background: rgba(0,0,0,.03);
 }
 ::-webkit-scrollbar {
     width: 12px;
     background-color: #F5F5F5;
 }
 ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-    background-color: #555;
+    background-color: #D3D3D3;
+    border: 3px solid rgba(0,0,0,.03);
 }
 
 
@@ -138,4 +137,8 @@ td.c1.inTable a{
 
 .hide{
     display:none;
+}
+
+.story-list {
+    height: 90%;
 }
