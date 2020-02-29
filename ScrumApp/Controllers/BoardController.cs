@@ -21,13 +21,6 @@ namespace ScrumApp.Controllers
             this.userManager = userManager;
         }
 
-        /*
-        när man klickar på ett projekt kommer man till det senaste "boardet",
-        men man kan även i en undermeny klicka i föregående boards, samt skapa ett nytt 
-
-        Index should redirect to the latest created board, if no board has been created yet dont redirect,
-        view message that displays no board created yet.
-        */
         public async Task<IActionResult> Index(string userSlug, string projectSlug)
         {
 
@@ -149,6 +142,7 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> Board(string userSlug, string projectSlug, string boardSlug)
         {
+            System.Diagnostics.Debug.WriteLine(userSlug + " " + projectSlug + " " + boardSlug);
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
             //check if the user exists

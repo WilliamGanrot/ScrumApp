@@ -92,7 +92,7 @@ namespace ScrumApp.Controllers
 
             }
 
-            return RedirectToAction("Index", "Board");
+            return RedirectToAction("Board", "Board");
         }
 
         [HttpPost]
