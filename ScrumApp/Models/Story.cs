@@ -10,6 +10,7 @@ namespace ScrumApp.Models
         public int StoryId { get; set; }
         public string StoryTitle { get; set; }
         public string StorySlug { get; set; }
+        public int StorySorting { get; set; }
 
         public int BoardColumnId { get; set; }
         public BoardColumn BoardColumn { get; set; }

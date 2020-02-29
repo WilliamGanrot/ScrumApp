@@ -97,19 +97,31 @@
             placeholder: "ui-state-highlight",
             forcePlaceholderSize: true,
             revert: true,
-            update: function () {
-                columnId = $(this).attr('id').slice(2);
+            stop: function (event, ui) {
+
+                columnId = $(ui.item[0].parentElement).attr('id');
+                storyId = $(ui.item[0]).attr('id').slice(6);
+
                 console.log("columnId: " + columnId);
 
-                var stories = $(this).children();
+                console.log("storyId: " + storyId);
 
-                let ids = $(stories).map(function(){
+
+                console.log(ui.item[0].parentElement);
+                console.log($('#' + columnId).find('.sortable-story'));
+                var ids = $('#' + columnId).find('.sortable-story').map(function () {
                     return this.id.slice(6);
-                }).get()
+                }).get();
 
-                console.log(ids);
+                let jsonString = JSON.stringify(ids);
+                console.log(jsonString);
 
+                let url = "/Story/reorder/" + columnId.slice(2);
+                console.log(url);
 
+                jQuery.ajaxSettings.traditional = true
+
+                $.post(url, {vals: ids}, function () { });
 
             }
 

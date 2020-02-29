@@ -32,7 +32,8 @@ namespace ScrumApp.Controllers
                 {
                     StoryTitle = createStory.StoryTitle,
                     StorySlug = createStory.StoryTitle.ToLower().Replace(" ", "-"),
-                    BoardColumn = context.BoardColumns.Find(createStory.BoardColumnId)
+                    BoardColumn = context.BoardColumns.Find(createStory.BoardColumnId),
+                    StorySorting = 100
                 };
 
                 await context.Stories.AddAsync(story);
@@ -43,6 +44,30 @@ namespace ScrumApp.Controllers
             }
 
             return RedirectToAction("Index", "Board");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> reorder(int id, int[] vals)
+        {
+            System.Diagnostics.Debug.WriteLine("BoardID: " + id);
+
+            BoardColumn boardColumn = await context.BoardColumns.FindAsync(id);
+
+            int order = 1;
+            foreach (var storyId in vals)
+            {
+                Story story = await context.Stories.FindAsync(storyId);
+                story.BoardColumn = boardColumn;
+                story.StorySorting = order;
+                order += 1;
+
+                context.Stories.Update(story);
+                await context.SaveChangesAsync();
+            }
+                
+            //System.Diagnostics.Debug.WriteLine("StoryId: " + storyId);
+
+            return Ok();
         }
     }
 }

@@ -190,10 +190,12 @@ namespace ScrumApp.Controllers
                 .ThenInclude(column => column.Stories)
                 .FirstOrDefault();
             
-
-
-            //order the columns in the boardview after sorting
+            //order boardcolumns
             currentBoard.BoardColumns = currentBoard.BoardColumns.OrderBy(c => c.BoardColumnSorting).ToList();
+              
+            foreach(BoardColumn column in currentBoard.BoardColumns)
+                column.Stories = column.Stories.OrderBy(c => c.StorySorting).ToList();
+
 
             ViewBag.boards = boards;
             return View(currentBoard);
