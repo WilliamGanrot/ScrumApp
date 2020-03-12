@@ -1,4 +1,5 @@
-﻿@model ScrumApp.Models.Board
+﻿@using ScrumApp.Utilities
+@model ScrumApp.Models.Board
 
 @{
     ViewData["Title"] = "Board";
@@ -30,7 +31,8 @@
 
                     @foreach (var board in ViewBag.boards)
                     {
-                        <li class="nav-item">
+
+                        <li class="nav-item @Html.IsBoardActive("Board", "Board", (string)board.BoardSlug)">
                             <a class="nav-link text-dark" asp-route-userSlug="@board.Project.Author.UserName" asp-route-projectSlug="@board.Project.Slug" asp-route-boardSlug="@board.BoardSlug">@board.BoardName</a>
                         </li>
                     }
@@ -72,13 +74,13 @@
                                         </div>
                                     </div>
                                 </div>
-   
+
                             }
 
                         </div>
 
                     </div>
-                    
+
                 </div>
             </div>
         }
@@ -168,7 +170,7 @@
             else {
                 $("#" + view_id).addClass("hide")
                 $("#" + load_id).removeClass("hide")
-                
+
             }
 
         });
