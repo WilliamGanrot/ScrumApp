@@ -9,42 +9,33 @@ using Microsoft.EntityFrameworkCore.Internal;
 using ScrumApp.Data;
 using ScrumApp.Models;
 using ScrumApp.Models.Account;
+using ScrumApp.Services;
+using ScrumApp.Services.ProjectS;
 
 namespace ScrumApp.Controllers
 {
     public class ProjectsController : Controller
     {
-        private readonly ScrumApplicationContext context;
         private readonly UserManager<AppUser> userManager;
+        private readonly IProjectService ProjectService;
 
-        public ProjectsController(ScrumApplicationContext context, UserManager<AppUser> userManager)
+        public ProjectsController(UserManager<AppUser> userManager, IProjectService ProjectService)
         {
-            this.context = context;
             this.userManager = userManager;
+            this.ProjectService = ProjectService;
         }
         public async Task<IActionResult> Index()
         {
 
-            if (User.Identity.IsAuthenticated)
-            {
-                AppUser user = await userManager.GetUserAsync(HttpContext.User);
-
-                var projects = context.UserProjects
-                    .Where(x => x.AppUser.Id == user.Id)
-                    .Include(x => x.Project.Author)
-                    .Select(x => x.Project)
-                    .ToList();
-
-                return View(projects);
-            }
-            else
-            {
+            if (!User.Identity.IsAuthenticated)
                 return View("~/Views/Home/Index.cshtml");
-            }
 
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            List<Project> projects = ProjectService.GetUserProjects(user);
+
+            return View(projects);
 
         }
-
 
         public IActionResult Create() => View();
 
@@ -52,63 +43,34 @@ namespace ScrumApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateProject createProject)
         {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index");
 
-            if (ModelState.IsValid)
-            {
-                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+                return RedirectToAction("Index");
 
-                if (user == null)
-                {
-                    //should return some kind of error
-                    System.Diagnostics.Debug.WriteLine("User Doesn't exist");
-                    return RedirectToAction("Index");
-                }
-
-                string slug = createProject.ProjectName.ToLower().Replace(" ", "-");
-
-                Project project = new Project
-                {
-                    ProjectName = createProject.ProjectName,
-                    Slug = slug,
-                    Author = user 
-                };
-
-                project.UserProjects = new List<UserProject>
-                {
-                    new UserProject
-                    {
-                        AppUser = user,
-                        Project = project
-                    }
-                };
-
-                await context.Projects.AddAsync(project);
-                context.SaveChanges();
-            }
-
+            bool successful = await ProjectService.Create(createProject, user);
+            System.Diagnostics.Debug.WriteLine(successful.ToString());
+            if (!successful)
+                return BadRequest("Could not create Project");
             return RedirectToAction("Index");
         }
 
         public IActionResult Details(int id)
         {
-            var project = context.Projects
-                .Where(x => x.ProjectId == id)
-                .Include(x => x.UserProjects)
-                .ThenInclude(x => x.AppUser)
-                .First();
-
+            Project project = ProjectService.Details(id);
             return View(project);
         }
 
         public async Task<IActionResult> Remove(int id)
         {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index");
 
-            Project userProject = await context.Projects.FindAsync(id);
-
-            context.Projects.Remove(userProject);
-            await context.SaveChangesAsync();
-
-
+            bool successful = await ProjectService.Remove(id);
+            if (!successful)
+                return BadRequest("Could not remove Project");
             return RedirectToAction("Index");
         }
 

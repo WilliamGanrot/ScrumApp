@@ -11,7 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ScrumApp.Data;
+using ScrumApp.Hubs;
 using ScrumApp.Models;
+using ScrumApp.Services;
+using ScrumApp.Services.Invitation_;
+using ScrumApp.Services.ProjectS;
 
 namespace ScrumApp
 {
@@ -28,13 +32,16 @@ namespace ScrumApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddSignalR();
             services.AddDbContext<ScrumApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ScrumApplicationContext")));
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<ScrumApplicationContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddScoped<IStoryService, StoryService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IInvitationService, InvitationService>();
 
         }
 
@@ -61,11 +68,13 @@ namespace ScrumApp
 
             app.UseEndpoints(endpoints =>
             {
+
+                endpoints.MapHub<BoardHub>("/Board/Index");
+
                 endpoints.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
-
 
                 endpoints.MapControllerRoute(
                     name: "default2",
