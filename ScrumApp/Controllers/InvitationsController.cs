@@ -18,13 +18,11 @@ namespace ScrumApp.Controllers
     [Authorize]
     public class InvitationsController : Controller
     {
-        private readonly ScrumApplicationContext context;
         private readonly UserManager<AppUser> userManager;
         private readonly IInvitationService InvitationService;
 
-        public InvitationsController(ScrumApplicationContext context, UserManager<AppUser> userManager, IInvitationService InvitationService)
+        public InvitationsController(UserManager<AppUser> userManager, IInvitationService InvitationService)
         {
-            this.context = context;
             this.userManager = userManager;
             this.InvitationService = InvitationService;
         }
@@ -33,7 +31,6 @@ namespace ScrumApp.Controllers
         {
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -94,18 +91,13 @@ namespace ScrumApp.Controllers
             AppUser invitedUser = await userManager.FindByIdAsync(invitation.UserId);
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            
-            
             if(user == invitedUser)
             {
-
                 bool successful = await InvitationService.AddUserToProject(invitedUser, invitation);
-
                 return Redirect("/");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("not allowed user");
                 return Unauthorized();
             }
         }

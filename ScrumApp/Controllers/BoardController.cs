@@ -7,73 +7,44 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScrumApp.Data;
 using ScrumApp.Models;
+using ScrumApp.Services.Board_;
 
 namespace ScrumApp.Controllers
 {
     public class BoardController : Controller
     {
-        private readonly ScrumApplicationContext context;
         private readonly UserManager<AppUser> userManager;
+        private readonly IBoardService boardService;
 
-        public BoardController(ScrumApplicationContext context, UserManager<AppUser> userManager)
+        public BoardController(UserManager<AppUser> userManager, IBoardService boardService)
         {
-            this.context = context;
+            this.boardService = boardService;
             this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index(string userSlug, string projectSlug)
         {
-
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            //check if the user exists
-            AppUser projectOwner = context.Users
-                .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
-                .FirstOrDefault();
-            
-            //if (projectOwner == null)
-            //    return "Could not find user";
+            AppUser projectOwner = boardService.GetUserBySlug(userSlug);
 
-            //check if the projects exists
-            var project = context.Projects
-                .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
-                .Where(x => x.Author == projectOwner)
-                .FirstOrDefault();
-            
+            Project project = boardService.GetProjectBySlug(projectSlug, projectOwner);
             if (project == null)
                 return NotFound();
 
-            //check if logged in user is a member of the project
-            //GIVES ERROR
-            var result = context.UserProjects
-                .Where(x => x.AppUser == user)
-                .Where(x => x.ProjectId == project.ProjectId)
-                .FirstOrDefault();
-
-            if (result == null)
+            if (!boardService.IsMemberOfProject(user, project))
                 return NotFound();
 
+            IQueryable<Board> boards = boardService.GetBoards(project);
 
-             var boards = context.Boards
-                .Where(x => x.Project == project);
-
-            if (boards.Count() == 0)
-            {
-                System.Diagnostics.Debug.WriteLine("No boards");
-            }
-            else
+            if (boards.Count() > 0)
             {
                 var latestBoard = boards.OrderByDescending(p => p.BoardId).FirstOrDefault();
                 string latestBoardSlug = latestBoard.BoardName.ToLower().Replace(" ", "-");
 
-
-                //This url will trigger the action Board-action
                 var url = "https://localhost:44388/" + project.Author.UserNameSlug + "/" + project.Slug + "/" + latestBoardSlug;
                 return Redirect(url);
-                //return RedirectToAction("Index", new { userSlug = projectOwner.UserNameSlug, projectSlug = project.Slug, boardSlug = latestBoardSlug });
-
             }
-
             return View(project);
         }
 
@@ -85,111 +56,54 @@ namespace ScrumApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateBoard createBoard, string userSlug, string projectSlug)
         {
-            if (ModelState.IsValid)
-            {
-                AppUser user = await userManager.GetUserAsync(HttpContext.User);
+            if (!ModelState.IsValid)
+                return View();
 
-                AppUser projectOwner = context.Users
-                    .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
-                    .FirstOrDefault();
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-                //check if the projects exists
-                var project = context.Projects
-                    .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
-                    .Where(x => x.Author == projectOwner)
-                    .FirstOrDefault();
+            AppUser projectOwner = boardService.GetUserBySlug(userSlug);
 
-                if (project == null)
-                    return NotFound();
+            Project project = boardService.GetProjectBySlug(projectSlug, projectOwner);
+            if (project == null)
+                return NotFound();
 
-                //check if logged in user is a member of the project
-                var result = context.UserProjects
-                    .Where(x => x.AppUser == user)
-                    .Where(x => x.ProjectId == project.ProjectId)
-                    .FirstOrDefault();
+            if (!boardService.IsMemberOfProject(user, project))
+                return NotFound();
 
-                if (result == null)
-                    return NotFound();
+            string slug = createBoard.BoardName.ToLower().Replace(" ", "-");
 
+            if (!boardService.ProjectNameIsAvailable(slug))
+                return View();
 
-                string slug = createBoard.BoardName.ToLower().Replace(" ", "-");
+            bool successful = await boardService.CreateBoard(createBoard, project, slug);
+            if (!successful)
+                return BadRequest("Could not create board");
 
-                var SlugExist = context.Boards
-                    .Where(x => x.BoardSlug == slug);
-
-                if (SlugExist == null)
-                {
-                    System.Diagnostics.Debug.WriteLine("A board with the title allready exists");
-                    return View();
-                }
-
-                Board board = new Board
-                {
-                    BoardName = createBoard.BoardName,
-                    BoardSlug = slug,
-                    Project = project
-                };
-
-                await context.Boards.AddAsync(board);
-                context.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-
-            return View();
+            return RedirectToAction("Index"); 
         }
 
 
         public async Task<IActionResult> Board(string userSlug, string projectSlug, string boardSlug)
         {
-            System.Diagnostics.Debug.WriteLine(userSlug + " " + projectSlug + " " + boardSlug);
+            System.Diagnostics.Debug.WriteLine("board");
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            //check if the user exists
-            AppUser projectOwner = context.Users
-                .Where(x => x.UserName.ToLower().Replace(" ", "-") == userSlug)
-                .FirstOrDefault();
+            AppUser projectOwner = boardService.GetUserBySlug(userSlug);
 
-            //if (projectOwner == null)
-            //    return "Could not find user";
-
-            //check if the projects exists
-            var project = context.Projects
-                .Where(x => x.ProjectName.ToLower().Replace(" ", "-") == projectSlug)
-                .Where(x => x.Author == projectOwner)
-                .FirstOrDefault();
-
+            Project project = boardService.GetProjectBySlug(projectSlug, projectOwner);
             if (project == null)
                 return NotFound();
 
-            //check if logged in user is a member of the project
-            //GIVES ERROR
-            var result = context.UserProjects
-                .Where(x => x.AppUser == user)
-                .Where(x => x.ProjectId == project.ProjectId)
-                .FirstOrDefault();
-
-            if (result == null)
+            
+            if (!boardService.IsMemberOfProject(user, project))
                 return NotFound();
 
-            var boards = context.Boards
-               .Where(x => x.Project == project);
-                
+
+            IQueryable<Board> boards = boardService.GetBoards(project);  
             if (boards == null)
                 return NotFound();
 
-            Board currentBoard = boards
-                .Where(board => board.BoardSlug == boardSlug)
-                .Include(board => board.BoardColumns)
-                .ThenInclude(column => column.Stories)
-                .FirstOrDefault();
-            
-            //order boardcolumns
-            currentBoard.BoardColumns = currentBoard.BoardColumns.OrderBy(c => c.BoardColumnSorting).ToList();
-              
-            foreach(BoardColumn column in currentBoard.BoardColumns)
-                column.Stories = column.Stories.OrderBy(c => c.StorySorting).ToList();
-
+            Board currentBoard = boardService.GetBoardWithColumnAndStories(boards, boardSlug);
 
             ViewBag.boards = boards;
             return View(currentBoard);
