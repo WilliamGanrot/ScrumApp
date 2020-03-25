@@ -15,6 +15,7 @@ using ScrumApp.Hubs;
 using ScrumApp.Models;
 using ScrumApp.Services;
 using ScrumApp.Services.Board_;
+using ScrumApp.Services.BoardColumn_;
 using ScrumApp.Services.Invitation_;
 using ScrumApp.Services.ProjectS;
 
@@ -44,6 +45,7 @@ namespace ScrumApp
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IInvitationService, InvitationService>();
             services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<IBoardColumnService, BoardColumnService>();
 
         }
 

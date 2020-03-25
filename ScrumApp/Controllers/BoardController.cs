@@ -85,7 +85,6 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> Board(string userSlug, string projectSlug, string boardSlug)
         {
-            System.Diagnostics.Debug.WriteLine("board");
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
             AppUser projectOwner = boardService.GetUserBySlug(userSlug);
@@ -94,10 +93,8 @@ namespace ScrumApp.Controllers
             if (project == null)
                 return NotFound();
 
-            
             if (!boardService.IsMemberOfProject(user, project))
                 return NotFound();
-
 
             IQueryable<Board> boards = boardService.GetBoards(project);  
             if (boards == null)
