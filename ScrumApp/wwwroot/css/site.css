@@ -131,6 +131,7 @@ td.c1.inTable a{
 
 .ui-state-highlight {
     border: 1px dashed #ccc;
+    margin-bottom:1rem;
 }
 
 .card-header{
@@ -159,8 +160,30 @@ td.c1.inTable a{
     background-color: transparent;
     border:0;
 }
-.card-header {
+.ui-sortable-handle {
     background-color: transparent;
-    border-bottom:0;
-    padding-left:0;
+    border-bottom: 0;
+
+}
+#draggable {
+    padding-top: 0;
+    padding-left: 0;
+}
+.tt {
+    top: 0;
+    right: 0;
+    position: absolute;
+    padding-right: 5px;
+}
+.card-body{
+    padding:1rem;
+}
+.card-title{
+    margin-bottom:0;
+}
+.fas{
+    font-size: .8rem;
+}
+h6 {
+    font-size: .9rem;
 }
