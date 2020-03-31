@@ -51,23 +51,18 @@
         {
 
 
-            <div class="col-3 mb-4 this-is-cool" id="@boardColumn.BoardColumnId">
-                <div class="card h-100">
+            <div class="col-2 mb-4 this-is-cool" id="@boardColumn.BoardColumnId">
+                <div class="card h-100 column-style">
                     <div class="card-header" style="font-weight:600;" id="draggable">
                         @boardColumn.BoardColumnName
                     </div>
-                    <div class="card-body" style="overflow-y:auto;">
-                        <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
-                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add Story</a>
-                        <div class="hide" id="view_@boardColumn.BoardColumnId">
-                            <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
+                    <div class="card-body inner-column-style" style="overflow-y:auto;overflow-x:hidden">
 
-                        </div>
-                        <div style="margin-top:1.25rem" class="story-list" id="x_@boardColumn.BoardColumnId">
+                        <div id="x_@boardColumn.BoardColumnId">
                             @foreach (var x in boardColumn.Stories)
                             {
-                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem;margin-top:1.25rem" id="story_@x.StoryId">
-                                    <div class="card">
+                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@x.StoryId">
+                                    <div class="card story-style">
                                         <div class="card-body">
                                             <h5 class="card-title story-handle" style="cursor:pointer">@x.StoryTitle</h5>
                                             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
@@ -76,6 +71,12 @@
                                 </div>
 
                             }
+
+                        </div>
+                        <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
+                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add Story</a>
+                        <div class="hide" id="view_@boardColumn.BoardColumnId">
+                            <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
 
                         </div>
 

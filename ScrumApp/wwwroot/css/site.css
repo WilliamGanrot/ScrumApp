@@ -60,8 +60,9 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  height:100%;
+    /* Margin bottom by footer height */
+    height: 100%;
+    background-color: #FAFAFA;
 }
 .footer {
   position: absolute;
@@ -111,7 +112,7 @@ td.c1.inTable a{
 
 
 
-
+/*
 ::-webkit-scrollbar-track {
     background: rgba(0,0,0,.03);
 }
@@ -121,9 +122,10 @@ td.c1.inTable a{
 }
 ::-webkit-scrollbar-thumb {
     background-color: #D3D3D3;
+    padding-left:10px;
     border: 3px solid rgba(0,0,0,.03);
 }
-
+*/
 
 
 
@@ -139,10 +141,26 @@ td.c1.inTable a{
     display:none;
 }
 
-.story-list {
-    height: 90%;
-}
 
 .active {
     font-weight: 600;
+}
+
+.story-style {
+    border-radius: 0 !important;
+    box-shadow: 0 1.6px 3.6px 0 #E0E0E0;
+}
+.inner-column-style {
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.column-style {
+    background-color: transparent;
+    border:0;
+}
+.card-header {
+    background-color: transparent;
+    border-bottom:0;
+    padding-left:0;
 }
