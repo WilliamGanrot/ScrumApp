@@ -31,6 +31,16 @@ namespace ScrumApp.Services
             return saveResult == 1;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            Story story = await context.Stories.FindAsync(id);
+
+            context.Stories.Remove(story);
+            int saveResult = await context.SaveChangesAsync();
+
+            return saveResult == 1;
+        }
+
         public async Task<bool> Reorder(int BoardColumnId, int[] vals)
         {
             BoardColumn boardColumn = await context.BoardColumns.FindAsync(BoardColumnId);

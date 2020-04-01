@@ -44,6 +44,19 @@ namespace ScrumApp.Controllers
             bool successful = await StoryService.Reorder(id, vals);
             if(!successful)
                 return BadRequest("Could not reorder stories");
+
+            return Ok();
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "Board");
+
+            bool succesful = await StoryService.Delete(id);
+            if (!succesful)
+                return BadRequest("Could not remove story");
+
             return Ok();
         }
     }

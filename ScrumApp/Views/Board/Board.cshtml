@@ -5,18 +5,18 @@
     ViewData["Title"] = "Board";
 }
 
-    <head>
+<head>
 
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="google" value="notranslate" />
-        <title>Side Menu</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="google" value="notranslate" />
+    <title>Side Menu</title>
 
-        <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
-        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-    </head>
+</head>
 
 
 
@@ -67,20 +67,21 @@
                                 <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@x.StoryId">
                                     <div class="card story-style">
                                         <div class="tt">
-                                            <span style="cursor:pointer;color:#343a40" class="fas fa-ellipsis-v"></span>
+                                            <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
                                         </div>
                                         <div class="card-body">
                                             <h6 class="card-title story-handle" style="cursor: pointer">@x.StoryTitle</h6>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
 
                             }
+                            <p id="lala"></p>
 
                         </div>
                         <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
-                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add Story</a>
+                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add a story</a>
                         <div class="hide" id="view_@boardColumn.BoardColumnId">
                             <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
 
@@ -98,16 +99,26 @@
 
 </div>
 
-
 @section Scripts{
     <script>
+
+
+        $('.tt').on('click', function(){
+            console.log(this);
+        });    
+
+
+        $(".sortable-story").hover(function () {
+            $(this.firstElementChild.firstElementChild).fadeToggle(200);
+          });
+
         $('.story-list').sortable({
             connectWith: ".story-list",
             placeholder: "ui-state-highlight",
             forcePlaceholderSize: true,
             revert: true,
             stop: function (event, ui) {
-   
+
                 columnId = $(ui.item[0].parentElement).attr('id');
                 storyId = $(ui.item[0]).attr('id').slice(6);
 
