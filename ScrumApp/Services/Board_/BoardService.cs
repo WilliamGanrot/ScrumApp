@@ -37,6 +37,7 @@ namespace ScrumApp.Services.Board_
                 .Where(board => board.BoardSlug == boardSlug)
                 .Include(board => board.BoardColumns)
                 .ThenInclude(column => column.Stories)
+                .ThenInclude(story => story.UserStories)
                 .FirstOrDefault();
 
             //order boardcolumns

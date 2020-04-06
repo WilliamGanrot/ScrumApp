@@ -111,8 +111,8 @@ namespace ScrumApp
 
 
             });
-            CreateAdminRole(serviceProvider);
-            CreateAdminUserAsync(serviceProvider);
+            //CreateAdminRole(serviceProvider);
+            //CreateAdminUserAsync(serviceProvider);
         }
 
 

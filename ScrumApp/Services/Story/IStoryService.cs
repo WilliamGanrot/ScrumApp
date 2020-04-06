@@ -11,5 +11,7 @@ namespace ScrumApp.Services
         Task<bool> Create(CreateStory createStory);
         Task<bool> Reorder(int BoardColumnId, int[] vals);
         Task<bool> Delete(int id);
+        Task<bool> AssignToStory(int id, AppUser user);
+        Task<bool> DissociateToStory(int id, AppUser user);
     }
 }

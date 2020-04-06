@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+
+
 </head>
 <body>
     <div class="full-height">
@@ -23,17 +26,29 @@
                         @if (User.Identity.IsAuthenticated)
                         {
 
-                            <ul class="navbar-nav flex-grow-1 justify-content-sm-end">
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
-                                    </li>
-                                }
+                        <ul class="navbar-nav flex-grow-1 justify-content-sm-end">
+                            @if (User.IsInRole("Admin"))
+                            {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                    <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
                                 </li>
-                            </ul>
+                            }
+
+                            @using Microsoft.AspNetCore.Identity
+                            @using ScrumApp.Models
+                            @inject UserManager<AppUser> userManager
+
+
+                            @{
+                                var user = await userManager.FindByNameAsync(User.Identity.Name);
+                            }
+
+
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        </ul>
                         }
                         else
                         {

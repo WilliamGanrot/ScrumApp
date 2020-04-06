@@ -186,5 +186,60 @@ td.c1.inTable a{
     font-size: .8rem;
 }
 h6 {
-    font-size: .9rem;
+    font-size: .8rem;
 }
+
+.user-avatar {
+    display: inline-block;
+    float: inherit;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-color: grey;
+    border-width: 1px !important;
+    border-style: solid;
+    line-height: 36px;
+    border-radius: 50%;
+    background-size: cover;
+    font-weight: 100;
+    font-size: 18px;
+    text-align: center;
+    text-shadow: 0 0 2px rgba(0,0,0,.9);
+    color: white;
+}
+
+
+
+.material-icons {
+    margin: 0.1rem;
+    color: lightgrey;
+    float: right;
+    font-size: 1.8rem !important;
+
+}
+
+
+
+
+.material-icons:hover {
+    color: grey;
+}
+
+hr{
+    margin:0!important;
+}
+
+.story-profil-img {
+    margin: 0.1rem !important;
+    border-radius: 50%;
+    float: right;
+    border: solid 2px white;
+    height: 1.8rem;
+    width: 1.8rem;
+}
+
+.img-offset {
+    position: relative;
+    left: 1.2rem;
+}
+
+

@@ -58,5 +58,36 @@ namespace ScrumApp.Services
             int saveResult = await context.SaveChangesAsync();
             return saveResult == 1;
         }
+        public async Task<bool> AssignToStory(int id, AppUser user)
+        {
+            Story story = await context.Stories.FindAsync(id);
+
+            UserStory userStory = new UserStory
+            {
+                AppUser = user,
+                Story = story
+            };
+
+            story.UserStories = new List<UserStory> { userStory };
+
+            int saveResult = await context.SaveChangesAsync();
+            return saveResult == 1;
+        }
+
+        public async Task<bool> DissociateToStory(int id, AppUser user)
+        {
+            Story story = await context.Stories.FindAsync(id);
+
+            UserStory userStory = context.UserStories
+                .Where(x => x.AppUser == user)
+                .Where(x => x.Story == story)
+                .FirstOrDefault();
+
+            context.UserStories.Remove(userStory);
+
+            int saveResult = await context.SaveChangesAsync();
+            return saveResult == 1;
+        }
     }
+    
 }

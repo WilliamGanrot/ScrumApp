@@ -32,7 +32,7 @@ namespace ScrumApp.Controllers
             if (!successful)
                 return BadRequest("Could not create Story");
 
-            return RedirectToAction("Index", "Board");
+            return RedirectToAction("Board", "Board");
         }
 
         [HttpPost]
@@ -59,5 +59,34 @@ namespace ScrumApp.Controllers
 
             return Ok();
         }
+        
+        public async Task<IActionResult> AssignToStory(int id)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "Board");
+
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+            bool succesful = await StoryService.AssignToStory(id, user);
+            if (!succesful)
+                return BadRequest("Could not assigntoggle story");
+
+            return RedirectToAction("Board", "Board");
+        }
+
+        public async Task<IActionResult> DissociateToStory(int id)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "Board");
+
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+            bool succesful = await StoryService.DissociateToStory(id, user);
+            if (!succesful)
+                return BadRequest("Could not Dissociate story");
+
+            return RedirectToAction("Board", "Board");
+        }
+
     }
 }

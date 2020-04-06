@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    partial class ScrumApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200401051538_AppUser-app-profile-pic")]
+    partial class AppUserappprofilepic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -358,21 +360,6 @@ namespace ScrumApp.Migrations
                     b.ToTable("UserProjects");
                 });
 
-            modelBuilder.Entity("ScrumApp.Models.UserStory", b =>
-                {
-                    b.Property<int>("StoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("StoryId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserStories");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -468,21 +455,6 @@ namespace ScrumApp.Migrations
 
                     b.HasOne("ScrumApp.Models.AppUser", "AppUser")
                         .WithMany("UserProjects")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ScrumApp.Models.UserStory", b =>
-                {
-                    b.HasOne("ScrumApp.Models.Story", "Story")
-                        .WithMany("UserStories")
-                        .HasForeignKey("StoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ScrumApp.Models.AppUser", "AppUser")
-                        .WithMany("UserStories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -15,6 +15,9 @@ namespace ScrumApp.Models.Account
         [Required, EmailAddress]
         public string Email { get; set; }
 
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
         [DataType(DataType.Password), Required]
         public string Password { get; set; }
 

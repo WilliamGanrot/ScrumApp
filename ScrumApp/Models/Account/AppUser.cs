@@ -10,6 +10,10 @@ namespace ScrumApp.Models
     {
 
         public string UserNameSlug { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string ProfilePicture { get; set; }
         public ICollection<UserProject> UserProjects { get; set; }
+        public ICollection<UserStory> UserStories { get; set; }
     }
 }

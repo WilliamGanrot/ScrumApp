@@ -16,6 +16,10 @@
 
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
+    <link href="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
 </head>
 
 
@@ -62,18 +66,74 @@
                     <div class="card-body inner-column-style" style="overflow-y:auto;overflow-x:hidden">
 
                         <div id="x_@boardColumn.BoardColumnId" class="story-list">
-                            @foreach (var x in boardColumn.Stories)
+                            @foreach (var story in boardColumn.Stories)
                             {
-                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@x.StoryId">
+                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@story.StoryId">
                                     <div class="card story-style">
                                         <div class="tt">
                                             <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
                                         </div>
                                         <div class="card-body">
-                                            <h6 class="card-title story-handle" style="cursor: pointer">@x.StoryTitle</h6>
+                                            <h6 class="card-title story-handle" style="cursor: pointer">@story.StoryTitle</h6>
 
                                         </div>
+                                        <hr />
+                                        
+                                        <div style="width:100%">
+                                            @using Microsoft.AspNetCore.Identity
+                                            @using ScrumApp.Models
+                                            @inject UserManager<AppUser> userManager
+                                            @{
+                                                var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+                                            }
+
+                                            @if (story.UserStories.Count == 0)
+                                            {
+                                                <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer" class="material-icons d-sm-inline-flex flex-sm-row-reverse">add_circle_outline</a>
+                                            }
+                                            else
+                                            {
+                                                double offset = 0;
+                                                bool first = true;
+                                                foreach (var userStory in story.UserStories)
+                                                {
+
+
+                                                    if (first == false)
+                                                    {
+                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img img-offset">
+                                                        offset += 1.2;
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img">
+                                                    }
+
+
+
+                                                    first = false;
+                                                }
+                                                string o = @offset.ToString().Replace(",",".") + "rem";
+                                                
+
+
+                                                var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();
+                                                <div class="wowowow pull-right" style="display:none;left:@o; padding:0;margin:0;position:relative;">
+                                                    @if (x == null)
+                                                    {
+                                                        <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">add_circle_outline</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="Story" asp-action="DissociateToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">remove_circle_outline</a>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+
                                     </div>
+
                                 </div>
 
                             }
@@ -101,15 +161,26 @@
 
 @section Scripts{
     <script>
+        /*
+        $(".material-icons").on('click', function () {
 
+            let story_id = this.parentElement.parentElement.parentElement.id.slice(6);
+            let url = "/Story/AssignToggle/" + story_id;
+
+            jQuery.ajaxSettings.traditional = true
+            $.post(url, { id: story_id }, function () { });
+
+        });
+        */
 
         $('.tt').on('click', function(){
             console.log(this);
-        });    
+        });
 
 
         $(".sortable-story").hover(function () {
             $(this.firstElementChild.firstElementChild).fadeToggle(200);
+            $(this).find(".wowowow").fadeToggle(200);
           });
 
         $('.story-list').sortable({
