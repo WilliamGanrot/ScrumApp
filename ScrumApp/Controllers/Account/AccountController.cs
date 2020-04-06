@@ -69,7 +69,7 @@ namespace ScrumApp.Controllers.Account
                 graphics.DrawString(initials, font, textBrush, (int)((width - textSize.Width) / 2), (int)((height - textSize.Height) / 2));
 
                 string uploadsDir = Path.Combine(webHostEnvironment.WebRootPath, "media\\Users");
-                string filePath = Path.Combine(uploadsDir, initials + "_profile.png");
+                string filePath = Path.Combine(uploadsDir, userRegister.Email + "_profile.png");
 
                 bmp.Save(filePath);
 
@@ -81,7 +81,7 @@ namespace ScrumApp.Controllers.Account
                     UserNameSlug = UserName.Replace(" ", ""),
                     FirstName = FirstName,
                     LastName = LastName,
-                    ProfilePicture = initials + "_profile.png" //should generate uniqe one instead
+                    ProfilePicture = userRegister.Email + "_profile.png" //should generate uniqe one instead
                 };
 
                 IdentityResult result = await userManager.CreateAsync(appUser, userRegister.Password);

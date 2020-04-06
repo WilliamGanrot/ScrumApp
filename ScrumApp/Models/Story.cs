@@ -16,22 +16,6 @@ namespace ScrumApp.Models
         public BoardColumn BoardColumn { get; set; }
 
         public ICollection<UserStory> UserStories { get; set; }
-
-        
-        
-        public bool IsUserAssignerToStory(AppUser user)
-        {
-            System.Diagnostics.Debug.WriteLine("__________");
-            var x = this.UserStories.Where(x => x.AppUser == user).FirstOrDefault();
-            if (x != null)
-            {
-                System.Diagnostics.Debug.WriteLine("true");
-                return true;
-            }
-            System.Diagnostics.Debug.WriteLine("false");
-            return false;
-            
-        }
         
     }
 }

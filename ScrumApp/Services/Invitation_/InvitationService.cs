@@ -25,7 +25,7 @@ namespace ScrumApp.Services.Invitation_
 
         public async Task<bool> CreateInvitation(ProjectInvitation projectInvitation, Project project, AppUser user, string token)
         {
-            projectInvitation.UserId = user.Id;
+            projectInvitation.Email = user.Email;
             projectInvitation.ProjectId = project.ProjectId;
             projectInvitation.token = token;
 
@@ -90,7 +90,7 @@ namespace ScrumApp.Services.Invitation_
         public bool UserIsInvited(Project project, AppUser user)
         {
             ProjectInvitation invitation = context.ProjectInvitations
-                .Where(x => x.UserId == user.Id)
+                .Where(x => x.Email == user.Email)
                 .Where(x => x.ProjectId == project.ProjectId)
                 .FirstOrDefault();
 

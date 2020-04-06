@@ -46,6 +46,12 @@
                     <li class="nav-item">
                         <a id="create-board" asp-action="Create"><span class="fas fa-plus"></span>   Add Board</a>
                     </li>
+                    <ul class="nav navbar-nav ml-auto" style="margin:0;padding:0;">
+                        <li class="nav-item pull-right" style="margin:0;padding:0;">
+                            <span style="font-size:1rem!important;" class="material-icons">person_add</span>
+                        </li>
+                    </ul>
+
                 </ul>
             </div>
         </div>
@@ -79,15 +85,13 @@
                                         </div>
                                         <hr />
                                         
-                                        <div style="width:100%">
+                                        <div style="width:100%;height:2rem;">
                                             @using Microsoft.AspNetCore.Identity
                                             @using ScrumApp.Models
                                             @inject UserManager<AppUser> userManager
                                             @{
                                                 var user = await userManager.FindByNameAsync(User.Identity.Name);
-
                                             }
-
                                             @if (story.UserStories.Count == 0)
                                             {
                                                 <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer" class="material-icons d-sm-inline-flex flex-sm-row-reverse">add_circle_outline</a>
@@ -98,7 +102,6 @@
                                                 bool first = true;
                                                 foreach (var userStory in story.UserStories)
                                                 {
-
 
                                                     if (first == false)
                                                     {
@@ -114,8 +117,8 @@
 
                                                     first = false;
                                                 }
-                                                string o = @offset.ToString().Replace(",",".") + "rem";
-                                                
+                                                string o = @offset.ToString().Replace(",", ".") + "rem";
+
 
 
                                                 var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();

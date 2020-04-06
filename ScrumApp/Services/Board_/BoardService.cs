@@ -38,6 +38,7 @@ namespace ScrumApp.Services.Board_
                 .Include(board => board.BoardColumns)
                 .ThenInclude(column => column.Stories)
                 .ThenInclude(story => story.UserStories)
+                .ThenInclude(userStory => userStory.AppUser)
                 .FirstOrDefault();
 
             //order boardcolumns

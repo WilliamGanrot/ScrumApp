@@ -45,7 +45,9 @@ namespace ScrumApp.Controllers
             if (project == null)
                 return NotFound();
 
-            AppUser invitedUser = await userManager.FindByIdAsync(projectInvitation.UserId);
+            AppUser invitedUser = await userManager.FindByEmailAsync(projectInvitation.Email);
+
+            //AppUser invitedUser = await userManager.FindByIdAsync(projectInvitation.Email);
             if (invitedUser == null)
             {
                 TempData["Error"] = "The user doesn't exist";
@@ -81,6 +83,7 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> ConfirmInvitation(string token)
         {
+            System.Diagnostics.Debug.WriteLine("confirming invitation");
             ProjectInvitation invitation = await InvitationService.GetInvitation(token);
             if (invitation == null)
             {
@@ -88,7 +91,7 @@ namespace ScrumApp.Controllers
                 return Redirect("/");
             }
 
-            AppUser invitedUser = await userManager.FindByIdAsync(invitation.UserId);
+            AppUser invitedUser = await userManager.FindByEmailAsync(invitation.Email);
             AppUser user = await userManager.GetUserAsync(HttpContext.User);
 
             if(user == invitedUser)

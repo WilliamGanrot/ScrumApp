@@ -62,6 +62,8 @@ namespace ScrumApp.Services
         {
             Story story = await context.Stories.FindAsync(id);
 
+            System.Diagnostics.Debug.WriteLine("Assigning " + user.UserName + " to " + story.StoryTitle);
+            /*
             UserStory userStory = new UserStory
             {
                 AppUser = user,
@@ -69,6 +71,19 @@ namespace ScrumApp.Services
             };
 
             story.UserStories = new List<UserStory> { userStory };
+            
+            */
+            story.UserStories = new List<UserStory>
+{
+              new UserStory {
+                Story = story,
+                AppUser = user
+              }
+            };
+
+            System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.WriteLine(story.UserStories.Count.ToString());
+            System.Diagnostics.Debug.WriteLine("");
 
             int saveResult = await context.SaveChangesAsync();
             return saveResult == 1;
