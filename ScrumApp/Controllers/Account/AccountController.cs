@@ -44,7 +44,7 @@ namespace ScrumApp.Controllers.Account
 
                 string initials = FirstName[0].ToString() + LastName[0].ToString();
 
-                List<string> colorList = new List<string> { "Yellow", "Blue", "Red", "Green", "Brown", "Azure", "Ivory", "Teal", "Purple", "Orange", "Maroon", "Aquamarine", "Coral", "Fuchsia", "Wheat", "Lime", "Crimson", "Khaki", "Magenta", "Olden", "Plum", "Olive", "Cyan" };
+                List<string> colorList = new List<string> { "Yellow", "Blue", "Red", "Green", "Brown", "Ivory", "Teal", "Purple", "Orange", "Maroon", "Aquamarine", "Coral", "Fuchsia", "Wheat", "Lime", "Crimson", "Khaki", "Magenta", "Olden", "Plum", "Olive", "Cyan" };
 
                 Random random = new Random();
                 int index = random.Next(colorList.Count());

@@ -33,6 +33,14 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 
+                <ul class="navbar-nav ml-auto" style="margin:0;padding:0;">
+
+                    <li class="nav-item pull-right" style="margin:0;padding:0;">
+                        <a id="invite-users-btn" class="text-dark" asp-route-userSlug="@Model.Project.Author.UserName" asp-route-projectSlug="@Model.Project.Slug" asp-controller="invitations">
+                            <span style="margin-right:.5rem;font-weight: 600;">Invite user</span> <span style="font-size:19px!important;" class="material-icons text-dark">person_add</span>
+                        </a>
+                    </li>
+                </ul>
 
                 <ul class="navbar-nav flex-grow-1">
 
@@ -46,20 +54,28 @@
                     <li class="nav-item">
                         <a id="create-board" asp-action="Create"><span class="fas fa-plus"></span>   Add Board</a>
                     </li>
-                    <ul class="nav navbar-nav ml-auto" style="margin:0;padding:0;">
-                        <li class="nav-item pull-right" style="margin:0;padding:0;">
-                            <span style="font-size:1rem!important;" class="material-icons">person_add</span>
-                        </li>
-                    </ul>
 
                 </ul>
+
             </div>
         </div>
     </nav>
 }
 
 <div class="view-content full-height">
-    <div class="row no-stack full-height" id="sortable">
+
+
+    <div class="row no-stack full-height" style="position:relative" id="sortable">
+
+        <div class="popup hide">
+            <div class="popup-container">
+                <form>
+                    <div class="pull-right" id="add-email"><span class="fas fa-plus"></span> Add another </div>
+                    <input id="submit-email-invitation" type="submit" value="Invite"/>
+                </form>
+            </div>
+        </div>
+
         @foreach (var boardColumn in Model.BoardColumns)
         {
 
@@ -69,6 +85,7 @@
                     <div class="card-header" style="font-weight:600;" id="draggable">
                         @boardColumn.BoardColumnName
                     </div>
+
                     <div class="card-body inner-column-style" style="overflow-y:auto;overflow-x:hidden">
 
                         <div id="x_@boardColumn.BoardColumnId" class="story-list">
@@ -84,7 +101,7 @@
 
                                         </div>
                                         <hr />
-                                        
+
                                         <div style="width:100%;height:2rem;">
                                             @using Microsoft.AspNetCore.Identity
                                             @using ScrumApp.Models
@@ -143,6 +160,7 @@
                             <p id="lala"></p>
 
                         </div>
+
                         <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
                         <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add a story</a>
                         <div class="hide" id="view_@boardColumn.BoardColumnId">
@@ -165,16 +183,35 @@
 @section Scripts{
     <script>
         /*
-        $(".material-icons").on('click', function () {
+        $(".sb-textfield").on('focus', function () {
+            $(this).css("width", "100%");
 
-            let story_id = this.parentElement.parentElement.parentElement.id.slice(6);
-            let url = "/Story/AssignToggle/" + story_id;
-
-            jQuery.ajaxSettings.traditional = true
-            $.post(url, { id: story_id }, function () { });
+        });
+                $(".sb-textfield").on('focusout', function () {
+            $(this).css("width", "70%");
 
         });
         */
+
+
+        $("#add-email").on('click', function () {
+            $('<input type="text" placeholder="Email Adress..." class="sb-textfield email-field" />').insertBefore("#add-email");
+        })
+
+        $("#invite-users-btn").on('click', function (event) {
+            event.preventDefault();
+
+            if ($(".popup").hasClass("hide")) {
+
+                $('<input type="text" placeholder="Email Adress..." class="sb-textfield email-field" />').insertBefore("#add-email");
+                $(".popup").removeClass("hide");
+            }
+            else {
+
+                $(".popup").addClass("hide");
+                $(".email-field").remove();
+            }
+        });
 
         $('.tt').on('click', function(){
             console.log(this);

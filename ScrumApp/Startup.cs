@@ -33,6 +33,8 @@ namespace ScrumApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
             services.AddControllersWithViews();
             services.AddSignalR();
             services.AddDbContext<ScrumApplicationContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ScrumApplicationContext")));
@@ -91,6 +93,7 @@ namespace ScrumApp
                     pattern: "{userSlug}/{projectSlug}/{controller}/{action}",
                     defaults: new { controller = "Board", action = "Index" }
                 );
+
                 endpoints.MapControllerRoute(
                         name: "default",
                         pattern: "{controller=Projects}/{action=Index}/{id?}",
