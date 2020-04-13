@@ -103,6 +103,8 @@ namespace ScrumApp.Controllers
             Board currentBoard = boardService.GetBoardWithColumnAndStories(boards, boardSlug);
 
             ViewBag.boards = boards;
+            ViewBag.project = project;
+
             return View(currentBoard);
         }
     }

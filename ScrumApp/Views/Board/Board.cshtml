@@ -69,9 +69,13 @@
 
         <div class="popup hide">
             <div class="popup-container">
-                <form>
+                <form asp-controller="Invitations" asp-action="InviteMany" method="post">
+                    @Html.AntiForgeryToken()
+
+
                     <div class="pull-right" id="add-email"><span class="fas fa-plus"></span> Add another </div>
-                    <input id="submit-email-invitation" type="submit" value="Invite"/>
+                    <a id="submit-email-invitation" style="cursor:pointer">Invite</a>
+
                 </form>
             </div>
         </div>
@@ -182,16 +186,44 @@
 
 @section Scripts{
     <script>
-        /*
-        $(".sb-textfield").on('focus', function () {
-            $(this).css("width", "100%");
 
-        });
-                $(".sb-textfield").on('focusout', function () {
-            $(this).css("width", "70%");
+        $("#submit-email-invitation").on('click', function (event) {
 
+            var projectName = '@Model.Project.Slug';
+            var projectAuthor = '@Model.Project.Author.UserNameSlug';
+            var url = "/" + projectAuthor + "/" + projectName + "/Invitations/InviteMany"
+
+            var token = $("[name='__RequestVerificationToken']").val();
+
+            console.log(token);
+
+            var headers = {};
+            headers['Accept'] = "application/json";
+            headers['__RequestVerificationToken'] = token;
+            headers['RequestVerificationToken'] = token;
+
+            console.log(headers)
+
+            let es = $('.email-field').map(function () {
+                return $(this).val();
+            }).get()
+
+
+            console.log(es)
+
+            jQuery.ajaxSettings.traditional = true
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                headers: headers,
+                data: { emails: es },
+                
+            });
+
+            $(".popup").addClass("hide");
+            $(".email-field").remove();
         });
-        */
 
 
         $("#add-email").on('click', function () {

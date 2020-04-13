@@ -34,6 +34,92 @@ namespace ScrumApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> InviteMany([FromRoute] string userSlug, [FromRoute] string projectSlug, string[] emails)
+        {
+            System.Diagnostics.Debug.WriteLine("in invitemany");
+
+            System.Diagnostics.Debug.WriteLine(userSlug);
+            System.Diagnostics.Debug.WriteLine(projectSlug);
+
+            System.Diagnostics.Debug.WriteLine(emails);
+
+
+
+            if (!ModelState.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine("modelstate not valid");
+                return RedirectToAction("Index");
+            }
+                
+
+            System.Diagnostics.Debug.WriteLine("in invitemany2");
+
+            AppUser projectOwner = InvitationService.GetProjectOwner(userSlug);
+
+            System.Diagnostics.Debug.WriteLine("in invitemany3");
+
+            Project project = InvitationService.GetProject(projectOwner, projectSlug);
+
+            System.Diagnostics.Debug.WriteLine("in invitemany4");
+
+            if (project == null)
+                return NotFound();
+
+            System.Diagnostics.Debug.WriteLine("in invitemany5");
+
+            foreach (string email in emails)
+            {
+                System.Diagnostics.Debug.WriteLine(email);
+                AppUser invitedUser = await userManager.FindByEmailAsync(email);
+
+     
+                //if (invitedUser == null)
+                //{
+                //    return StatusCode(500);
+                //}
+
+                //if (invitedUser == null)
+                //{
+                //    return StatusCode(500);
+                //}
+
+                //if (InvitationService.UserInProject(project, invitedUser))
+                //{
+                //    return StatusCode(500);
+                //}
+               
+                //if (InvitationService.UserIsInvited(project, invitedUser))
+                //{
+                //    return StatusCode(500);
+                //} 
+                
+
+                ProjectInvitation projectInvitation = new ProjectInvitation
+                {
+                };
+                System.Diagnostics.Debug.WriteLine("5");
+                string token = await userManager.GenerateUserTokenAsync(invitedUser, "Default", "ProjectInvitation");
+                string confirmationLink = "https://localhost:44388" + Url.Action("ConfirmInvitation", "Invitations", new { token = token });
+                System.Diagnostics.Debug.WriteLine("6");
+                bool successful = await InvitationService.CreateInvitation(projectInvitation, project, invitedUser, token);
+                if (!successful)
+                {
+
+                    System.Diagnostics.Debug.WriteLine("failed to invite");
+                    return BadRequest("Could not create invitation");
+                }
+                System.Diagnostics.Debug.WriteLine("7");
+
+                InvitationService.SendInvitation(invitedUser, confirmationLink);
+                System.Diagnostics.Debug.WriteLine("8");
+            }
+            
+            System.Diagnostics.Debug.WriteLine("9");
+            return Ok();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Invite(string userSlug, string projectSlug, ProjectInvitation projectInvitation)
         {
             if (!ModelState.IsValid)
