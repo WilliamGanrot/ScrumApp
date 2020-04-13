@@ -1,4 +1,5 @@
 ﻿@using ScrumApp.Utilities
+@using System.Web;
 @model ScrumApp.Models.Board
 
 @{
@@ -13,6 +14,8 @@
     <title>Side Menu</title>
 
     <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="~/css/chat.css" />
+
 
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
@@ -112,6 +115,7 @@
                                             @inject UserManager<AppUser> userManager
                                             @{
                                                 var user = await userManager.FindByNameAsync(User.Identity.Name);
+
                                             }
                                             @if (story.UserStories.Count == 0)
                                             {
@@ -185,59 +189,147 @@
 </div>
 
 
-<div id="chatbox">
-    <div class="chatbox-content">
 
-        <div class="col-2">Message</div>
-        <input type="text" id="messageInput" />
 
-        <input type="button" id="sendButton" value="Send Message" />
+<div id="live-chat">
+    <header id="clearfix">
+        <h4>@Model.Project.ProjectName</h4>
+    </header>
 
-        <br />
+    <div class="hide" id="chatbox-content">
 
-        <ul id="messagesList"></ul>
+        <ul style="margin-bottom:0;margin-top:0;padding-top:0;padding-bottom:0;padding-left:0;" id="messagesList">
+        </ul>
+
+
+
+        <div class="chat-controls">
+            <textarea id="messageInput" class="chat-controls__textarea" rows="2" placeholder="Type your message"></textarea>
+            <div class="btns-row">
+                <a href="#" class="chat-controls__btn" id="sendButton">Send</a>
+            </div>
+        </div>
 
     </div>
 </div>
+
+
+
+
+
+
+
 
 @section Scripts{
 
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
 
-    <script>
 
+    <script>
+        @inject UserManager<AppUser> userManager
+        @{
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+        }
 
         var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
 
         document.getElementById("sendButton").disabled = true;
 
+        connection.on("ReceiveMessage", function (message, user, userId, userImg) {
 
-        connection.on("ReceiveMessage", function (message) {
-
-            console.log("message recived");
-            console.log(message);
-
+            var usr = user.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             var encodedMsg = msg;
-            var li = document.createElement("li");
-            li.textContent = encodedMsg;
-            document.getElementById("messagesList").appendChild(li);
+
+            if ('@user.Id'.localeCompare(userId) == 0) {
+                var textBoxMessage = document.createElement("div");
+                textBoxMessage.classList.add("text-box-message");
+                textBoxMessage.innerText = encodedMsg;
+
+                var h6 = document.createElement("h6");
+                h6.innerText = usr;
+            
+                var textBox = document.createElement("div");
+                textBox.classList.add("text-box-right");
+                textBox.appendChild(h6)
+                textBox.appendChild(textBoxMessage);
+
+                var textsection = document.createElement("div");
+                textsection.classList.add("text-section-right");
+                textsection.classList.add("col-9");
+                textsection.appendChild(textBox);
+                console.log(textsection);
+
+                var img = document.createElement("img");
+                img.src = "../../media/Users/" + userImg;
+
+                var imgSection = document.createElement("div");
+                imgSection.classList.add("img-section");
+                imgSection.classList.add("col-3");
+                imgSection.appendChild(img);
+
+                var li = document.createElement("li");
+                li.classList.add("message");
+                li.classList.add("row");
+                li.appendChild(imgSection);
+                li.appendChild(textsection);
+
+                document.getElementById("messagesList").appendChild(li);
+            }
+            else {
+                var textBoxMessage = document.createElement("div");
+                textBoxMessage.classList.add("text-box-message");
+                textBoxMessage.innerText = encodedMsg;
+
+                var h6 = document.createElement("h6");
+                h6.innerText = usr;
+            
+                var textBox = document.createElement("div");
+                textBox.classList.add("text-box-left");
+                textBox.appendChild(h6)
+                textBox.appendChild(textBoxMessage);
+
+                var textsection = document.createElement("div");
+                textsection.classList.add("text-section-left");
+                textsection.classList.add("col-9");
+                textsection.appendChild(textBox);
+                console.log(textsection);
+
+                var img = document.createElement("img");
+                img.src = "../../media/Users/" + userImg;
+
+                var imgSection = document.createElement("div");
+                imgSection.classList.add("img-section");
+                imgSection.classList.add("col-3");
+                imgSection.appendChild(img);
+
+                var li = document.createElement("li");
+                li.classList.add("message");
+                li.classList.add("row");
+                li.appendChild(textsection);
+                li.appendChild(imgSection);
+
+
+                document.getElementById("messagesList").appendChild(li);
+            }
+
+ 
+
+
         });
 
         connection.start().then(function () {
-
-            console.log("start");
 
             document.getElementById("sendButton").disabled = false;
 
             var projectId = '@Model.Project.ProjectId';
             var group = 'group_' + projectId;
 
-            
+
             connection.invoke("JoinGroup", group).catch(function (err) {
                 return console.error(err.toString());
             });
-            
+
 
         }).catch(function (err) {
             return console.error(err.toString());
@@ -245,16 +337,20 @@
 
         document.getElementById("sendButton").addEventListener("click", function (event) {
 
-            console.log("send message");
-
             var message = document.getElementById("messageInput").value;
 
             var projectId = '@Model.Project.ProjectId';
+            var userName = "@user.FirstName @user.LastName";
+            var userId = "@user.Id";
+            var userImg = "@user.ProfilePicture";
             var group = 'group_' + projectId;
 
-            connection.invoke("SendMessageToGroup", group, message).catch(function (err) {
+
+            connection.invoke("SendMessageToGroup", group, message, userName, userId, userImg).catch(function (err) {
                 return console.error(err.toString());
             });
+
+            document.getElementById("messageInput").value = "";
 
             event.preventDefault();
         });
@@ -275,6 +371,21 @@
 
 
 
+        document.getElementById("clearfix").addEventListener("click", function (event) {
+
+            if (document.getElementById("chatbox-content").classList.contains("hide")) {
+                document.getElementById("chatbox-content").classList.remove("hide");
+            }
+            else {
+                document.getElementById("chatbox-content").classList.add("hide");
+            }
+        })
+
+
+
+
+
+
         $("#submit-email-invitation").on('click', function (event) {
 
             var projectName = '@Model.Project.Slug';
@@ -283,14 +394,10 @@
 
             var token = $("[name='__RequestVerificationToken']").val();
 
-            console.log(token);
-
             var headers = {};
             headers['Accept'] = "application/json";
             headers['__RequestVerificationToken'] = token;
             headers['RequestVerificationToken'] = token;
-
-            console.log(headers)
 
             let es = $('.email-field').map(function () {
                 return $(this).val();
@@ -331,11 +438,6 @@
             }
         });
 
-        $('.tt').on('click', function(){
-            console.log(this);
-        });
-
-
         $(".sortable-story").hover(function () {
             $(this.firstElementChild.firstElementChild).fadeToggle(200);
             $(this).find(".wowowow").fadeToggle(200);
@@ -351,22 +453,13 @@
                 columnId = $(ui.item[0].parentElement).attr('id');
                 storyId = $(ui.item[0]).attr('id').slice(6);
 
-                console.log("columnId: " + columnId);
-
-                console.log("storyId: " + storyId);
-
-
-                console.log(ui.item[0].parentElement);
-                console.log($('#' + columnId).find('.sortable-story'));
                 var ids = $('#' + columnId).find('.sortable-story').map(function () {
                     return this.id.slice(6);
                 }).get();
 
                 let jsonString = JSON.stringify(ids);
-                console.log(jsonString);
 
                 let url = "/Story/reorder/" + columnId.slice(2);
-                console.log(url);
 
                 jQuery.ajaxSettings.traditional = true
 
@@ -385,17 +478,14 @@
             revert: true,
 
             update: function () {
-                console.log("y")
-                //let ids = $("#sortable").sortable("serialize");
+
                 let ids = $('.this-is-cool').map(function(){
                     return this.id;
                 }).get()
 
                 let jsonString = JSON.stringify(ids);
-                console.log(jsonString);
 
                 var x = $("#sortable").serializeArray();
-                console.log(x);
 
                 let url = "/BoardColumn/reorder/"+@Model.BoardId;
                 jQuery.ajaxSettings.traditional = true
@@ -408,8 +498,6 @@
             load_id = evt.target.id;
             id = load_id.slice(5)
             view_id = "view_" + id;
-            console.log(view_id);
-
 
             if ($("#" + view_id).hasClass("hide")) {
                 $("#" + view_id).removeClass("hide")
