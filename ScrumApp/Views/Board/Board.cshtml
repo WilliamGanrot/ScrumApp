@@ -198,7 +198,7 @@
 
     <div class="hide" id="chatbox-content">
 
-        <ul style="margin-bottom:0;margin-top:0;padding-top:0;padding-bottom:0;padding-left:0;" id="messagesList">
+        <ul style="margin-bottom:0;margin-top:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;" id="messagesList">
         </ul>
 
 
@@ -223,7 +223,7 @@
 @section Scripts{
 
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
-
+    <script src="~/js/chat.js"></script>
 
     <script>
         @inject UserManager<AppUser> userManager
@@ -241,80 +241,12 @@
             var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             var encodedMsg = msg;
 
-            if ('@user.Id'.localeCompare(userId) == 0) {
-                var textBoxMessage = document.createElement("div");
-                textBoxMessage.classList.add("text-box-message");
-                textBoxMessage.innerText = encodedMsg;
+            var li = createMessageDOM('@user.Id', user, userId, userImg, encodedMsg);
+            document.getElementById("messagesList").appendChild(li);
 
-                var h6 = document.createElement("h6");
-                h6.innerText = usr;
-            
-                var textBox = document.createElement("div");
-                textBox.classList.add("text-box-right");
-                textBox.appendChild(h6)
-                textBox.appendChild(textBoxMessage);
-
-                var textsection = document.createElement("div");
-                textsection.classList.add("text-section-right");
-                textsection.classList.add("col-9");
-                textsection.appendChild(textBox);
-                console.log(textsection);
-
-                var img = document.createElement("img");
-                img.src = "../../media/Users/" + userImg;
-
-                var imgSection = document.createElement("div");
-                imgSection.classList.add("img-section");
-                imgSection.classList.add("col-3");
-                imgSection.appendChild(img);
-
-                var li = document.createElement("li");
-                li.classList.add("message");
-                li.classList.add("row");
-                li.appendChild(imgSection);
-                li.appendChild(textsection);
-
-                document.getElementById("messagesList").appendChild(li);
+            if (document.getElementById("chatbox-content").classList.contains("hide")) {
+                console.log("notification!!!!");
             }
-            else {
-                var textBoxMessage = document.createElement("div");
-                textBoxMessage.classList.add("text-box-message");
-                textBoxMessage.innerText = encodedMsg;
-
-                var h6 = document.createElement("h6");
-                h6.innerText = usr;
-            
-                var textBox = document.createElement("div");
-                textBox.classList.add("text-box-left");
-                textBox.appendChild(h6)
-                textBox.appendChild(textBoxMessage);
-
-                var textsection = document.createElement("div");
-                textsection.classList.add("text-section-left");
-                textsection.classList.add("col-9");
-                textsection.appendChild(textBox);
-                console.log(textsection);
-
-                var img = document.createElement("img");
-                img.src = "../../media/Users/" + userImg;
-
-                var imgSection = document.createElement("div");
-                imgSection.classList.add("img-section");
-                imgSection.classList.add("col-3");
-                imgSection.appendChild(img);
-
-                var li = document.createElement("li");
-                li.classList.add("message");
-                li.classList.add("row");
-                li.appendChild(textsection);
-                li.appendChild(imgSection);
-
-
-                document.getElementById("messagesList").appendChild(li);
-            }
-
- 
-
 
         });
 
