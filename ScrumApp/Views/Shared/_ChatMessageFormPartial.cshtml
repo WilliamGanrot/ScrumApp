@@ -1,0 +1,16 @@
+﻿@model ScrumApp.Models.ChatMessage
+
+
+
+<form asp-controller="ChatMessage" asp-action="Create" method="post" class="chat-controls">
+    <textarea asp-for="MessageText" id="messageInput" class="chat-controls__textarea" rows="2" placeholder="Type your message"></textarea>
+    <span asp-validation-for="MessageText" class="text-danger"></span>
+    <div class="btns-row">
+        <input type="submit" value="Create" id="sendButton" class="chat-controls__btn" />
+    </div>
+</form>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

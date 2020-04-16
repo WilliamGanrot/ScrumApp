@@ -2,7 +2,7 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class returnurl : Migration
+    public partial class fixauthorid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

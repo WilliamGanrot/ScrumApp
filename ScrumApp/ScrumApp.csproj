@@ -5,6 +5,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200414093903_chatmessages_key_to_int.cs" />
+    <Compile Remove="Migrations\20200414093903_chatmessages_key_to_int.Designer.cs" />
+    <Compile Remove="Migrations\20200414093955_chatmessages_key_to_int_redo.cs" />
+    <Compile Remove="Migrations\20200414093955_chatmessages_key_to_int_redo.Designer.cs" />
+    <Compile Remove="Migrations\20200414094231_chatmessages_key.cs" />
+    <Compile Remove="Migrations\20200414094231_chatmessages_key.Designer.cs" />
+    <Compile Remove="Migrations\20200414094743_chatmessages.cs" />
+    <Compile Remove="Migrations\20200414094743_chatmessages.Designer.cs" />
+    <Compile Remove="Migrations\20200414095038_back.cs" />
+    <Compile Remove="Migrations\20200414095038_back.Designer.cs" />
+    <Compile Remove="Migrations\20200414095258_chatmessages.cs" />
+    <Compile Remove="Migrations\20200414095258_chatmessages.Designer.cs" />
+    <Compile Remove="Migrations\20200414100031_chatmessages.cs" />
+    <Compile Remove="Migrations\20200414100031_chatmessages.Designer.cs" />
+    <Compile Remove="Migrations\20200414103338_chatmessages4.cs" />
+    <Compile Remove="Migrations\20200414103338_chatmessages4.Designer.cs" />
+    <Compile Remove="Migrations\20200414103556_chatmessages4.cs" />
+    <Compile Remove="Migrations\20200414103556_chatmessages4.Designer.cs" />
+    <Compile Remove="Migrations\20200414103719_chatmessages4.cs" />
+    <Compile Remove="Migrations\20200414103719_chatmessages4.Designer.cs" />
+    <Compile Remove="Migrations\20200414103844_chatmessages4.cs" />
+    <Compile Remove="Migrations\20200414103844_chatmessages4.Designer.cs" />
+    <Compile Remove="Migrations\20200414104233_chatmessages4.cs" />
+    <Compile Remove="Migrations\20200414104233_chatmessages4.Designer.cs" />
+    <Compile Remove="Migrations\20200414114553_chatmessages_update_new_back.cs" />
+    <Compile Remove="Migrations\20200414114553_chatmessages_update_new_back.Designer.cs" />
+    <Compile Remove="Migrations\20200414115027_test.cs" />
+    <Compile Remove="Migrations\20200414115027_test.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.10.1" />
     <PackageReference Include="MailKit" Version="2.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0" />

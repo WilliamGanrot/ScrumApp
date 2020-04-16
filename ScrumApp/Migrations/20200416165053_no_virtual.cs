@@ -2,7 +2,7 @@
 
 namespace ScrumApp.Migrations
 {
-    public partial class add_boardColumn : Migration
+    public partial class no_virtual : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

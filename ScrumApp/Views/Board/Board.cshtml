@@ -1,5 +1,6 @@
 ﻿@using ScrumApp.Utilities
 @using System.Web;
+
 @model ScrumApp.Models.Board
 
 @{
@@ -147,7 +148,7 @@
 
 
                                                 var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();
-                                                <div class="wowowow pull-right" style="display:none;left:@o; padding:0;margin:0;position:relative;">
+                                                <div class="wowowow pull-right" style="display:none;padding:0;margin:0;position:relative;">
                                                     @if (x == null)
                                                     {
                                                         <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">add_circle_outline</a>
@@ -197,18 +198,16 @@
     </header>
 
     <div class="hide" id="chatbox-content">
-
+        <div id="btn_container"></div>
         <ul style="margin-bottom:0;margin-top:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;" id="messagesList">
         </ul>
 
-
-
-        <div class="chat-controls">
+        <form method="post" class="chat-controls">
             <textarea id="messageInput" class="chat-controls__textarea" rows="2" placeholder="Type your message"></textarea>
             <div class="btns-row">
                 <a href="#" class="chat-controls__btn" id="sendButton">Send</a>
             </div>
-        </div>
+        </form>
 
     </div>
 </div>
@@ -231,6 +230,7 @@
             var user = await userManager.FindByNameAsync(User.Identity.Name);
         }
 
+        var oldest_message_id = 0;
         var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
 
         document.getElementById("sendButton").disabled = true;
@@ -244,9 +244,11 @@
             var li = createMessageDOM('@user.Id', user, userId, userImg, encodedMsg);
             document.getElementById("messagesList").appendChild(li);
 
+            /*
             if (document.getElementById("chatbox-content").classList.contains("hide")) {
                 console.log("notification!!!!");
             }
+            */
 
         });
 
@@ -262,10 +264,46 @@
                 return console.error(err.toString());
             });
 
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetNextChatMessages", "ChatMessage")",
+                success: function (result) {
+
+                    result.forEach(function (entry) {
+
+                        var dom = createMessageDOM('@user.Id', entry.AuthorName, entry.AuthorId, entry.userImage, entry.messageText);
+                        document.getElementById("messagesList").prepend(dom);
+
+                    });
+
+                    if (result.length > 0) {
+                        var b = document.createElement("a");
+                        b.textContent = "Load more...";
+                        b.id = "load_more";
+                        document.getElementById("btn_container").prepend(b);
+
+                        oldest_message_id = result[result.length - 1].messageId;
+
+                        if (result.length < 5) {
+                            document.getElementById("load_more").classList.add("hide");
+                        }
+                    }
+
+
+
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+
 
         }).catch(function (err) {
             return console.error(err.toString());
         });
+
+
+
 
         document.getElementById("sendButton").addEventListener("click", function (event) {
 
@@ -282,10 +320,28 @@
                 return console.error(err.toString());
             });
 
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Create", "ChatMessage")",
+                data: {
+                    "MessageText": message,
+                    "ProjectId": projectId,
+                    "AuthorId": userId
+                    },
+
+            });
+
+            
+
             document.getElementById("messageInput").value = "";
 
             event.preventDefault();
         });
+
+
+
+
 
         window.onbeforeunload = function () {
 
@@ -455,5 +511,40 @@
             $("#" + load_id).removeClass("hide");
 
         });
+
+
+         document.addEventListener('click',function(e){
+            if(e.target && e.target.id == 'load_more'){
+
+                console.log(oldest_message_id);
+
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("GetNextChatMessages", "ChatMessage")",
+                    data: { lastMessageId: oldest_message_id },
+                    success: function (result) {
+
+                        result.forEach(function (entry) {
+
+                            var dom = createMessageDOM('@user.Id', entry.AuthorName, entry.AuthorId, entry.userImage, entry.messageText);
+                            document.getElementById("messagesList").prepend(dom);
+
+                        });
+
+                        oldest_message_id = result[result.length - 1].messageId;
+
+                        if (result.length < 5) {
+                            document.getElementById("load_more").classList.add("hide");
+                        }
+
+                    },
+                    error: function (response) {
+                        alert(response);
+                    }
+                });
+
+             }
+         });
+
     </script>
 }

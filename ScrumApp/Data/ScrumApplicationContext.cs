@@ -49,6 +49,7 @@ namespace ScrumApp.Data
         public DbSet<ProjectInvitation> ProjectInvitations { get; set; }
         public DbSet<BoardColumn> BoardColumns { get; set; }
         public DbSet<Story> Stories { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
     }
 

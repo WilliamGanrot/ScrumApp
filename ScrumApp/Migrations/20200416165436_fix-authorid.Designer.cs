@@ -10,8 +10,8 @@ using ScrumApp.Data;
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    [Migration("20200210095611_boardCreate")]
-    partial class boardCreate
+    [Migration("20200416165436_fix-authorid")]
+    partial class fixauthorid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -171,6 +171,12 @@ namespace ScrumApp.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -193,6 +199,9 @@ namespace ScrumApp.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -243,6 +252,60 @@ namespace ScrumApp.Migrations
                     b.ToTable("Boards");
                 });
 
+            modelBuilder.Entity("ScrumApp.Models.BoardColumn", b =>
+                {
+                    b.Property<int>("BoardColumnId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BoardColumnName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BoardColumnSlug")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BoardColumnSorting")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BoardColumnId");
+
+                    b.HasIndex("BoardId");
+
+                    b.ToTable("BoardColumns");
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("ChatMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("MessageText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeSent")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ChatMessageId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("ScrumApp.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -273,6 +336,9 @@ namespace ScrumApp.Migrations
                     b.Property<string>("token")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
@@ -282,6 +348,32 @@ namespace ScrumApp.Migrations
                     b.HasKey("token");
 
                     b.ToTable("ProjectInvitations");
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.Story", b =>
+                {
+                    b.Property<int>("StoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BoardColumnId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StorySlug")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StorySorting")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StoryTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StoryId");
+
+                    b.HasIndex("BoardColumnId");
+
+                    b.ToTable("Stories");
                 });
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
@@ -297,6 +389,21 @@ namespace ScrumApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserProjects");
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.UserStory", b =>
+                {
+                    b.Property<int>("StoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("StoryId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserStories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -359,11 +466,42 @@ namespace ScrumApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ScrumApp.Models.BoardColumn", b =>
+                {
+                    b.HasOne("ScrumApp.Models.Board", "Board")
+                        .WithMany("BoardColumns")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.ChatMessage", b =>
+                {
+                    b.HasOne("ScrumApp.Models.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("ScrumApp.Models.Project", "Project")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ScrumApp.Models.Project", b =>
                 {
                     b.HasOne("ScrumApp.Models.AppUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.Story", b =>
+                {
+                    b.HasOne("ScrumApp.Models.BoardColumn", "BoardColumn")
+                        .WithMany("Stories")
+                        .HasForeignKey("BoardColumnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ScrumApp.Models.UserProject", b =>
@@ -376,6 +514,21 @@ namespace ScrumApp.Migrations
 
                     b.HasOne("ScrumApp.Models.AppUser", "AppUser")
                         .WithMany("UserProjects")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.UserStory", b =>
+                {
+                    b.HasOne("ScrumApp.Models.Story", "Story")
+                        .WithMany("UserStories")
+                        .HasForeignKey("StoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ScrumApp.Models.AppUser", "AppUser")
+                        .WithMany("UserStories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

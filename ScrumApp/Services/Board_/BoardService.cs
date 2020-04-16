@@ -22,7 +22,8 @@ namespace ScrumApp.Services.Board_
             {
                 BoardName = createBoard.BoardName,
                 BoardSlug = slug,
-                Project = project
+                Project = project,
+
             };
 
             await context.Boards.AddAsync(board);

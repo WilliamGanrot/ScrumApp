@@ -23,9 +23,8 @@ namespace ScrumApp.Models
 
 
         public ICollection<UserProject> UserProjects { get; set; }
-
-
         public ICollection<Board> Boards { get; set; }
+        public ICollection<ChatMessage> ChatMessages { get; set; }
 
     }
 }

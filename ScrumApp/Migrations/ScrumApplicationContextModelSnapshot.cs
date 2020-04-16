@@ -276,6 +276,34 @@ namespace ScrumApp.Migrations
                     b.ToTable("BoardColumns");
                 });
 
+            modelBuilder.Entity("ScrumApp.Models.ChatMessage", b =>
+                {
+                    b.Property<int>("ChatMessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("MessageText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TimeSent")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ChatMessageId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("ScrumApp.Models.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -441,6 +469,19 @@ namespace ScrumApp.Migrations
                     b.HasOne("ScrumApp.Models.Board", "Board")
                         .WithMany("BoardColumns")
                         .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ScrumApp.Models.ChatMessage", b =>
+                {
+                    b.HasOne("ScrumApp.Models.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("ScrumApp.Models.Project", "Project")
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
