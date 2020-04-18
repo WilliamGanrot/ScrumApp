@@ -198,7 +198,9 @@
     </header>
 
     <div class="hide" id="chatbox-content">
-        <div id="btn_container"></div>
+        <div id="btn_container">
+            <a id="load_more">Load more...</a>
+        </div>
         <ul style="margin-bottom:0;margin-top:0;padding-top:0;padding-bottom:0;padding-left:0;padding-right:0;" id="messagesList">
         </ul>
 
@@ -235,14 +237,16 @@
 
         document.getElementById("sendButton").disabled = true;
 
-        connection.on("ReceiveMessage", function (message, user, userId, userImg) {
+        connection.on("ReceiveMessage", function (message, user, userId, userImg, time) {
 
             var usr = user.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             var encodedMsg = msg;
 
-            var li = createMessageDOM('@user.Id', user, userId, userImg, encodedMsg);
+            var li = createMessageDOM('@user.Id', user, userId, userImg, encodedMsg, time);
             document.getElementById("messagesList").appendChild(li);
+
+            console.log(time);
 
             /*
             if (document.getElementById("chatbox-content").classList.contains("hide")) {
@@ -277,11 +281,12 @@
                     });
 
                     if (result.length > 0) {
+                        /*
                         var b = document.createElement("a");
                         b.textContent = "Load more...";
                         b.id = "load_more";
                         document.getElementById("btn_container").prepend(b);
-
+                        */
                         oldest_message_id = result[result.length - 1].messageId;
 
                         if (result.length < 5) {
@@ -316,21 +321,25 @@
             var group = 'group_' + projectId;
 
 
-            connection.invoke("SendMessageToGroup", group, message, userName, userId, userImg).catch(function (err) {
-                return console.error(err.toString());
-            });
+            if (message.length > 0) {
+                connection.invoke("SendMessageToGroup", group, message, userName, userId, userImg).catch(function (err) {
+                    return console.error(err.toString());
+                });
 
 
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("Create", "ChatMessage")",
-                data: {
-                    "MessageText": message,
-                    "ProjectId": projectId,
-                    "AuthorId": userId
-                    },
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Create", "ChatMessage")",
+                    data: {
+                        "MessageText": message,
+                        "ProjectId": projectId,
+                        "AuthorId": userId
+                        },
 
-            });
+                });
+            }
+
+
 
             
 

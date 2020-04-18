@@ -1,4 +1,4 @@
-﻿function createMessageDOM(logged_in_user_id, user, userId, userImg, message) {
+﻿function createMessageDOM(logged_in_user_id, user, userId, userImg, message, time) {
 
     console.log("in createMessageDOM");
     var usr = user.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -11,8 +11,10 @@
         textBoxMessage.classList.add("text-box-message");
         textBoxMessage.innerText = encodedMsg;
 
+
         var h6 = document.createElement("h6");
         h6.innerText = usr;
+
 
         var textBox = document.createElement("div");
         textBox.classList.add("text-box-left");
@@ -48,6 +50,7 @@
 
         var h6 = document.createElement("h6");
         h6.innerText = usr;
+
 
         var textBox = document.createElement("div");
         textBox.classList.add("text-box-right");

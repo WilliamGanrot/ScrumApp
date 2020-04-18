@@ -84,6 +84,7 @@ namespace ScrumApp
             {
 
                 endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<BoardHub>("/boardhub");
 
                 endpoints.MapControllerRoute(
                     name: "areas",

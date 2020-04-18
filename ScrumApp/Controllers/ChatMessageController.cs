@@ -64,6 +64,8 @@ namespace ScrumApp.Controllers
                     innerDict.Add("AuthorName", u.UserName);
                     innerDict.Add("AuthorId", m.AuthorId);
                     innerDict.Add("userImage", u.ProfilePicture);
+                    innerDict.Add("time", m.TimeSent.ToString("yyyy-MM-dd HH:mm"));
+
 
                     _list.Add(innerDict);
                 }
@@ -94,6 +96,7 @@ namespace ScrumApp.Controllers
                     innerDict.Add("AuthorName", u.UserName);
                     innerDict.Add("AuthorId", m.AuthorId);
                     innerDict.Add("userImage", u.ProfilePicture);
+                    innerDict.Add("time", m.TimeSent.ToString("yyyy-MM-dd HH:mm"));
 
                     _list.Add(innerDict);
                 }

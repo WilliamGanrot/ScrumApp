@@ -20,7 +20,7 @@ namespace ScrumApp.Hubs
 
         public Task SendMessageToGroup(string group, string message, string user, string userId, string userImg)
         {
-            return Clients.Group(group).SendAsync("ReceiveMessage", message, user, userId, userImg);
+            return Clients.Group(group).SendAsync("ReceiveMessage", message, user, userId, userImg, DateTime.Now.ToString("yyyy-MM-dd HH:mm"));
         }
     }
 }
