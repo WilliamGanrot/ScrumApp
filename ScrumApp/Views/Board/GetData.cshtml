@@ -1,0 +1,111 @@
+﻿@using ScrumApp.Utilities
+@using System.Web;
+
+@model ScrumApp.Models.Board
+
+    <div class="row no-stack full-height" style="position:relative" id="sortable">
+
+        @foreach (var boardColumn in Model.BoardColumns)
+        {
+
+
+            <div class="col-2 mb-4 this-is-cool" id="@boardColumn.BoardColumnId">
+                <div class="card h-100 column-style">
+                    <div class="card-header" style="font-weight:600;" id="draggable">
+                        @boardColumn.BoardColumnName
+                    </div>
+
+
+                    <div class="card-body inner-column-style" style="overflow-y:auto;overflow-x:hidden">
+
+                        <div id="x_@boardColumn.BoardColumnId" class="story-list">
+                            @foreach (var story in boardColumn.Stories)
+                            {
+                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@story.StoryId">
+                                    <div class="card story-style">
+                                        <div class="tt">
+                                            <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
+                                        </div>
+                                        <div class="card-body">
+                                            <h6 class="card-title story-handle" style="cursor: pointer">@story.StoryTitle</h6>
+
+                                        </div>
+                                        <hr />
+
+                                        <div style="width:100%;height:2rem;">
+                                            @using Microsoft.AspNetCore.Identity
+                                            @using ScrumApp.Models
+                                            @inject UserManager<AppUser> userManager
+                                            @{
+                                                var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+                                            }
+                                            @if (story.UserStories.Count == 0)
+                                            {
+                                                <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer" class="material-icons d-sm-inline-flex flex-sm-row-reverse">add_circle_outline</a>
+                                            }
+                                            else
+                                            {
+                                                double offset = 0;
+                                                bool first = true;
+                                                foreach (var userStory in story.UserStories)
+                                                {
+
+                                                    if (first == false)
+                                                    {
+                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img img-offset">
+                                                        offset += 1.2;
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img">
+                                                    }
+
+
+
+                                                    first = false;
+                                                }
+                                                string o = @offset.ToString().Replace(",", ".") + "rem";
+
+
+
+                                                var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();
+                                                <div class="wowowow pull-right" style="display:none;padding:0;margin:0;position:relative;">
+                                                    @if (x == null)
+                                                    {
+                                                        <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">add_circle_outline</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="Story" asp-action="DissociateToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">remove_circle_outline</a>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            }
+                            <p id="lala"></p>
+
+                        </div>
+
+                        <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
+                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add a story</a>
+                        <div class="hide" id="view_@boardColumn.BoardColumnId">
+                            <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        }
+        <div class="col-2 mb-2">
+            <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
+        </div>
+    </div>
+

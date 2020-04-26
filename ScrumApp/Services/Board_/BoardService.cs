@@ -32,7 +32,18 @@ namespace ScrumApp.Services.Board_
             return saveResult == 1;
         }
 
-        public Board GetBoardWithColumnAndStories(IQueryable<Board> boards, string boardSlug)
+        public Board get_partial_view(int b)
+        {
+            var z = context.Boards.Where(x => x.BoardId == b)
+                .Include(board => board.BoardColumns)
+                .ThenInclude(column => column.Stories)
+                .ThenInclude(story => story.UserStories)
+                .FirstOrDefault();
+
+            return z;
+        }
+
+            public Board GetBoardWithColumnAndStories(IQueryable<Board> boards, string boardSlug)
         {
             Board currentBoard = boards
                 .Where(board => board.BoardSlug == boardSlug)

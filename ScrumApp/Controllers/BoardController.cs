@@ -48,6 +48,32 @@ namespace ScrumApp.Controllers
             return View(project);
         }
 
+
+        public async Task<ActionResult> GetData(string userSlug, string projectSlug, string boardSlug) //that's if you need the model
+        {
+            AppUser user = await userManager.GetUserAsync(HttpContext.User);
+
+            AppUser projectOwner = boardService.GetUserBySlug(userSlug);
+
+            Project project = boardService.GetProjectBySlug(projectSlug, projectOwner);
+            if (project == null)
+                return NotFound();
+
+            if (!boardService.IsMemberOfProject(user, project))
+                return NotFound();
+
+            IQueryable<Board> boards = boardService.GetBoards(project);
+            if (boards == null)
+                return NotFound();
+
+            Board currentBoard = boardService.GetBoardWithColumnAndStories(boards, boardSlug);
+
+            var x = boardService.get_partial_view(currentBoard.BoardId);
+            //do whatever
+            //return "hej";
+            return PartialView("GetData", x);
+        }
+
         public IActionResult Create()
         {
             return View();

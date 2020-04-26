@@ -134,8 +134,10 @@ td.c1.inTable a{
     margin-bottom:1rem;
 }
 
-.card-header{
+.card-header {
     cursor: pointer;
+    background-color: transparent;
+    border-bottom:none;
 }
 
 .hide{
@@ -247,6 +249,7 @@ hr{
 .popup {
     background-color: white;
     margin: 0rem 0rem;
+    margin-right:1rem;
     width: 30rem;
     position: absolute;
     flex-direction: column;

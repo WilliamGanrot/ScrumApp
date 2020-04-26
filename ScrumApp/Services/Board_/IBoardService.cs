@@ -15,5 +15,6 @@ namespace ScrumApp.Services.Board_
         bool ProjectNameIsAvailable(string slug);
         Task<bool> CreateBoard(CreateBoard createBoard, Project project, string slug);
         Board GetBoardWithColumnAndStories(IQueryable<Board> boards, string boardSlug);
+        Board get_partial_view(int b);
     }
 }

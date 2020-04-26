@@ -48,6 +48,7 @@
 
                 <ul class="navbar-nav flex-grow-1">
 
+
                     @foreach (var board in ViewBag.boards)
                     {
 
@@ -66,127 +67,29 @@
     </nav>
 }
 
-<div class="view-content full-height">
+<div class="popup hide">
+    <div class="popup-container">
+        <form asp-controller="Invitations" asp-action="InviteMany" method="post">
+            @Html.AntiForgeryToken()
 
 
-    <div class="row no-stack full-height" style="position:relative" id="sortable">
+            <div class="pull-right" id="add-email"><span class="fas fa-plus"></span> Add another </div>
+            <a id="submit-email-invitation" style="cursor:pointer">Invite</a>
 
-        <div class="popup hide">
-            <div class="popup-container">
-                <form asp-controller="Invitations" asp-action="InviteMany" method="post">
-                    @Html.AntiForgeryToken()
-
-
-                    <div class="pull-right" id="add-email"><span class="fas fa-plus"></span> Add another </div>
-                    <a id="submit-email-invitation" style="cursor:pointer">Invite</a>
-
-                </form>
-            </div>
-        </div>
-
-        @foreach (var boardColumn in Model.BoardColumns)
-        {
-
-
-            <div class="col-2 mb-4 this-is-cool" id="@boardColumn.BoardColumnId">
-                <div class="card h-100 column-style">
-                    <div class="card-header" style="font-weight:600;" id="draggable">
-                        @boardColumn.BoardColumnName
-                    </div>
-
-                    <div class="card-body inner-column-style" style="overflow-y:auto;overflow-x:hidden">
-
-                        <div id="x_@boardColumn.BoardColumnId" class="story-list">
-                            @foreach (var story in boardColumn.Stories)
-                            {
-                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@story.StoryId">
-                                    <div class="card story-style">
-                                        <div class="tt">
-                                            <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
-                                        </div>
-                                        <div class="card-body">
-                                            <h6 class="card-title story-handle" style="cursor: pointer">@story.StoryTitle</h6>
-
-                                        </div>
-                                        <hr />
-
-                                        <div style="width:100%;height:2rem;">
-                                            @using Microsoft.AspNetCore.Identity
-                                            @using ScrumApp.Models
-                                            @inject UserManager<AppUser> userManager
-                                            @{
-                                                var user = await userManager.FindByNameAsync(User.Identity.Name);
-
-                                            }
-                                            @if (story.UserStories.Count == 0)
-                                            {
-                                                <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer" class="material-icons d-sm-inline-flex flex-sm-row-reverse">add_circle_outline</a>
-                                            }
-                                            else
-                                            {
-                                                double offset = 0;
-                                                bool first = true;
-                                                foreach (var userStory in story.UserStories)
-                                                {
-
-                                                    if (first == false)
-                                                    {
-                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img img-offset">
-                                                        offset += 1.2;
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img">
-                                                    }
-
-
-
-                                                    first = false;
-                                                }
-                                                string o = @offset.ToString().Replace(",", ".") + "rem";
-
-
-
-                                                var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();
-                                                <div class="wowowow pull-right" style="display:none;padding:0;margin:0;position:relative;">
-                                                    @if (x == null)
-                                                    {
-                                                        <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">add_circle_outline</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a asp-controller="Story" asp-action="DissociateToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">remove_circle_outline</a>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            }
-                            <p id="lala"></p>
-
-                        </div>
-
-                        <!--<a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="Story" asp-action="Create"><span class="fas fa-plus"></span>   Add Story</a>-->
-                        <a class="open" id="load_@boardColumn.BoardColumnId" style="color:#343a40!important; font-weight:600; cursor:pointer"><span class="fas fa-plus"></span>   Add a story</a>
-                        <div class="hide" id="view_@boardColumn.BoardColumnId">
-                            <partial name="_StoryFormPartial" model='new CreateStory { BoardColumnId = @boardColumn.BoardColumnId}'>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        }
-        <div class="col-2 mb-2">
-            <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
-        </div>
+        </form>
     </div>
+</div>
 
+@using Microsoft.AspNetCore.Identity
+@using ScrumApp.Models
+@inject UserManager<AppUser> userManager
+@{
+    var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+}
+
+<div id="board-content">
+    <partial name="GetData" model='@Model'>
 </div>
 
 
@@ -218,22 +121,53 @@
 
 
 
-
-
-
 @section Scripts{
+
+
+
+
+
+
+
+
+
+
+
 
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>
 
     <script>
+
+
         @inject UserManager<AppUser> userManager
         @{
             var user = await userManager.FindByNameAsync(User.Identity.Name);
         }
 
+
+        $(".story-list").sortable({
+            connectWith: ".story-list",
+            placeholder: "ui-state-highlight",
+            forcePlaceholderSize: true,
+            revert: true});
+
+        $(".story-list").disableSelection();
+
+        $("#sortable").sortable({
+            handle: '.card-header',
+            placeholder: "ui-state-highlight",
+            forcePlaceholderSize: true,
+            revert: true
+        });
+
+        $("#sortable").disableSelection();
+
+
+
         var oldest_message_id = 0;
         var connection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+        var boardConnection = new signalR.HubConnectionBuilder().withUrl("/boardhub").build();
 
         document.getElementById("sendButton").disabled = true;
 
@@ -248,13 +182,60 @@
 
             console.log(time);
 
-            /*
-            if (document.getElementById("chatbox-content").classList.contains("hide")) {
-                console.log("notification!!!!");
-            }
-            */
+        });
+
+        boardConnection.on("ReceiveMessage", function () {
+
+            var url = '/@Model.Project.Author.UserNameSlug/@Model.Project.Slug/@Model.BoardSlug/Board/GetData';
+            console.log(url);
+
+            setTimeout(function () {
+               $.ajax({
+                    url: url,
+                    type: "get",
+                    success: function (result) {
+                        $("#board-content").html(result);
+
+                       //Reatach sortable to the new dom-elements in the new partial view
+                       $(".story-list").sortable({
+                            connectWith: ".story-list",
+                            placeholder: "ui-state-highlight",
+                            forcePlaceholderSize: true,
+                            revert: true});
+
+                       $(".story-list").disableSelection();
+
+                        $("#sortable").sortable({
+                            handle: '.card-header',
+                            placeholder: "ui-state-highlight",
+                            forcePlaceholderSize: true,
+                            revert: true
+                        });
+
+                        $("#sortable").disableSelection();
+                    }
+                });
+            }, 200);  
 
         });
+
+
+        boardConnection.start().then(function () {
+
+            var projectId = '@Model.Project.ProjectId';
+            var group = 'group_' + projectId;
+
+
+            boardConnection.invoke("JoinGroup", group).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+
+
 
         connection.start().then(function () {
 
@@ -281,12 +262,7 @@
                     });
 
                     if (result.length > 0) {
-                        /*
-                        var b = document.createElement("a");
-                        b.textContent = "Load more...";
-                        b.id = "load_more";
-                        document.getElementById("btn_container").prepend(b);
-                        */
+
                         oldest_message_id = result[result.length - 1].messageId;
 
                         if (result.length < 5) {
@@ -340,13 +316,11 @@
             }
 
 
-
-            
-
             document.getElementById("messageInput").value = "";
 
             event.preventDefault();
         });
+
 
 
 
@@ -358,6 +332,9 @@
             var group = 'group_' + projectId;
 
             connection.invoke("LeaveGroup", group).catch(function (err) {
+                return console.error(err.toString());
+            });
+            boardConnection.invoke("LeaveGroup", group).catch(function (err) {
                 return console.error(err.toString());
             });
         };
@@ -440,14 +417,9 @@
             $(this).find(".wowowow").fadeToggle(200);
           });
 
-        $('.story-list').sortable({
-            connectWith: ".story-list",
-            placeholder: "ui-state-highlight",
-            forcePlaceholderSize: true,
-            revert: true,
-            stop: function (event, ui) {
+        $(document).on('sortstop', ".story-list", function (event, ui) {
 
-                columnId = $(ui.item[0].parentElement).attr('id');
+            columnId = $(ui.item[0].parentElement).attr('id');
                 storyId = $(ui.item[0]).attr('id').slice(6);
 
                 var ids = $('#' + columnId).find('.sortable-story').map(function () {
@@ -460,38 +432,49 @@
 
                 jQuery.ajaxSettings.traditional = true
 
-                $.post(url, {vals: ids}, function () { });
+                $.post(url, { vals: ids }, function () { });
 
-            }
 
+                var projectId = '@Model.Project.ProjectId';
+                var group = 'group_' + projectId;
+
+                
+                boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                    return console.error(err.toString());
+                });
+                
+            
         });
 
 
+        $(document).on('sortstop', "#sortable", function (event, ui) {
 
-        $("#sortable").sortable({
-            handle: '.card-header',
-            placeholder: "ui-state-highlight",
-            forcePlaceholderSize:true,
-            revert: true,
 
-            update: function () {
+            let ids = $('.this-is-cool').map(function(){
+                return this.id;
+            }).get()
 
-                let ids = $('.this-is-cool').map(function(){
-                    return this.id;
-                }).get()
+            let jsonString = JSON.stringify(ids);
 
-                let jsonString = JSON.stringify(ids);
+            var x = $("#sortable").serializeArray();
 
-                var x = $("#sortable").serializeArray();
+            let url = "/BoardColumn/reorder/"+@Model.BoardId;
+            jQuery.ajaxSettings.traditional = true
 
-                let url = "/BoardColumn/reorder/"+@Model.BoardId;
-                jQuery.ajaxSettings.traditional = true
+            $.post(url, { vals: ids }, function () { });
 
-                $.post(url, {vals: ids}, function () { });
-            }
+            var projectId = '@Model.Project.ProjectId';
+            var group = 'group_' + projectId;
+                        
+            boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                return console.error(err.toString());
+            });
+            
+            
         });
 
-        $('.card-body .open').click(function (evt) {
+
+        $(document).on('click', '.card-body .open', function (evt) {
             load_id = evt.target.id;
             id = load_id.slice(5)
             view_id = "view_" + id;
