@@ -94,7 +94,6 @@
 
 
 
-
 <div id="live-chat">
     <header id="clearfix">
         <h4>@Model.Project.ProjectName</h4>
@@ -123,17 +122,6 @@
 
 @section Scripts{
 
-
-
-
-
-
-
-
-
-
-
-
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/chat.js"></script>
 
@@ -144,7 +132,7 @@
         @{
             var user = await userManager.FindByNameAsync(User.Identity.Name);
         }
-
+        var refreshInterval;
 
         $(".story-list").sortable({
             connectWith: ".story-list",
@@ -186,35 +174,9 @@
 
         boardConnection.on("ReceiveMessage", function () {
 
-            var url = '/@Model.Project.Author.UserNameSlug/@Model.Project.Slug/@Model.BoardSlug/Board/GetData';
-            console.log(url);
 
             setTimeout(function () {
-               $.ajax({
-                    url: url,
-                    type: "get",
-                    success: function (result) {
-                        $("#board-content").html(result);
-
-                       //Reatach sortable to the new dom-elements in the new partial view
-                       $(".story-list").sortable({
-                            connectWith: ".story-list",
-                            placeholder: "ui-state-highlight",
-                            forcePlaceholderSize: true,
-                            revert: true});
-
-                       $(".story-list").disableSelection();
-
-                        $("#sortable").sortable({
-                            handle: '.card-header',
-                            placeholder: "ui-state-highlight",
-                            forcePlaceholderSize: true,
-                            revert: true
-                        });
-
-                        $("#sortable").disableSelection();
-                    }
-                });
+                refreshBoard();
             }, 200);  
 
         });
@@ -235,7 +197,38 @@
         });
 
 
+        function refreshBoard() {
+            var url = '/@Model.Project.Author.UserNameSlug/@Model.Project.Slug/@Model.BoardSlug/Board/GetData';
 
+            
+
+            $.ajax({
+                url: url,
+                type: "get",
+                success: function (result) {
+
+                    $("#board-content").html(result);
+
+                    //Reatach sortable to the new dom-elements in the new partial view
+                    $(".story-list").sortable({
+                        connectWith: ".story-list",
+                        placeholder: "ui-state-highlight",
+                        forcePlaceholderSize: true,
+                        revert: true});
+
+                    $(".story-list").disableSelection();
+
+                    $("#sortable").sortable({
+                        handle: '.card-header',
+                        placeholder: "ui-state-highlight",
+                        forcePlaceholderSize: true,
+                        revert: true
+                    });
+
+                    $("#sortable").disableSelection();
+                }
+            });
+        }
 
         connection.start().then(function () {
 
@@ -314,10 +307,7 @@
 
                 });
             }
-
-
             document.getElementById("messageInput").value = "";
-
             event.preventDefault();
         });
 
@@ -355,9 +345,66 @@
             }
         })
 
+        $(document).on('submit', '.story-style form', function (evt) {
 
+            var i = document.createElement("img");
+            i.classList.add("story-profil-img");
+            i.src = '/media/Users/@user.ProfilePicture';
+ 
+            var imageList = $(".story-user-field", this.parentElement.parentElement);
+            var action = this.action.split("/")[this.action.split("/").length - 1];
 
+            if (action == "AssignToStory") {
+                imageList.append(i);
+                $(this).find("button").text("remove_circle_outline");
+            }
+            else {
+                $(imageList).find("[src='/media/Users/@user.ProfilePicture']").remove();
+                $(this).find("button").text("add_circle_outline");
+            }
 
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function(result) {
+
+                    var projectId = '@Model.Project.ProjectId';
+                    var group = 'group_' + projectId;
+
+                    boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                        return console.error(err.toString());
+                    });
+
+                }
+            });
+
+            evt.preventDefault();
+        
+
+        });
+
+        $(document).on('submit', '.story-form-container form', function (evt) {
+
+            $.ajax({
+                url: this.action,
+                type: this.method,
+                data: $(this).serialize(),
+                success: function(result) {
+
+                    refreshBoard();
+
+                    var projectId = '@Model.Project.ProjectId';
+                    var group = 'group_' + projectId;
+
+                    boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                        return console.error(err.toString());
+                    });
+
+                }
+            });
+            event.preventDefault();
+        });
 
 
         $("#submit-email-invitation").on('click', function (event) {
@@ -412,10 +459,22 @@
             }
         });
 
-        $(".sortable-story").hover(function () {
-            $(this.firstElementChild.firstElementChild).fadeToggle(200);
-            $(this).find(".wowowow").fadeToggle(200);
-          });
+        $(document).on("mouseenter", ".sortable-story", function () {
+            $(this.firstElementChild.firstElementChild).css("display", "block");
+
+            if ($(this).find(".story-user-field").children().length != 0) {
+                $(this).find(".wowowow").css("display", "block");
+            }
+        });
+
+        $(document).on("mouseleave", ".sortable-story", function () {
+            $(this.firstElementChild.firstElementChild).css("display", "none");
+
+            if ($(this).find(".story-user-field").children().length != 0) {
+                $(this).find(".wowowow").css("display", "none");
+            }
+        });
+
 
         $(document).on('sortstop', ".story-list", function (event, ui) {
 

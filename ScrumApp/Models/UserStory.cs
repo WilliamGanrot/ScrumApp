@@ -12,5 +12,7 @@ namespace ScrumApp.Models
 
         public int StoryId { get; set; }
         public Story Story { get; set; }
+
+        public DateTime Date { get; set; }
     }
 }

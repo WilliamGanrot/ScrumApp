@@ -1,0 +1,81 @@
+﻿@using ScrumApp.Utilities
+@using System.Web;
+
+@model ScrumApp.Models.Story
+
+<div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@Model.StoryId">
+    <div class="card story-style">
+        <div class="tt">
+            <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
+        </div>
+        <div class="card-body">
+            <h6 class="card-title story-handle" style="cursor: pointer">@Model.StoryTitle</h6>
+
+        </div>
+        <hr />
+
+        <div class="story-footer" style="width:100%;height:2rem;">
+            @using Microsoft.AspNetCore.Identity
+            @using ScrumApp.Models
+            @inject UserManager<AppUser> userManager
+            @{
+                var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+            }
+            @if (@Model.UserStories.Count == 0)
+            {
+                <div class="story-user-field"></div>
+
+                <div class="wowowow pull-right" style="padding:0;margin:0;position:absolute">
+                    <form asp-controller="Story" asp-action="AssignToStory">
+                        <input type="hidden" name="id" value="@Model.StoryId" />
+                        <button id="tackle" style="cursor:pointer" class="button-as-text material-icons d-sm-inline-flex flex-sm-row-reverse" type="submit">add_circle_outline</button>
+                    </form>
+                </div>
+
+
+
+               
+            }
+            else
+            {
+                var z = Model.UserStories.AsQueryable();
+                
+                <div class="story-user-field">
+ 
+                    @foreach (var userStory in Model.UserStories.OrderBy(x => x.Date))
+                    {
+                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img">
+
+                    }
+                </div>
+
+
+
+                var x = Model.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == Model).FirstOrDefault();
+                <div class="wowowow pull-right fade-hide" style="display:none;padding:0;margin:0;position:absolute">
+                    @if (x == null)
+                    {
+                        <form asp-controller="Story" asp-action="AssignToStory">
+                            <input type="hidden" name="id" value="@Model.StoryId" />
+                            <button id="tackle" style="cursor:pointer;" class="button-as-text material-icons d-sm-inline-flex flex-sm-row-reverse pull-right" type="submit">add_circle_outline</button>
+                        </form>
+
+
+                    }
+                    else
+                    {
+                        <form asp-controller="Story" asp-action="DissociateToStory">
+                            <input type="hidden" name="id" value="@Model.StoryId" />
+                            <button id="tackle" style="cursor:pointer;" class="button-as-text material-icons d-sm-inline-flex flex-sm-row-reverse pull-right" type="submit">remove_circle_outline</button>
+                        </form>
+
+                    }
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+

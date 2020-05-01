@@ -1,6 +1,6 @@
 ﻿@model ScrumApp.Models.CreateStory
 <div class="row" >
-    <div class="col-md-12">
+    <div class="col-md-12 story-form-container">
         <form asp-controller="Story" asp-action="Create">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -13,7 +13,7 @@
                 <span asp-validation-for="StoryTitle" class="text-danger"></span>
             </div>
 
-            <div class="form-group" style="margin-bottom:0">
+            <div class="form-group create-story-form" style="margin-bottom:0">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a style="cursor:pointer;color:white;" id="close_form_@Model.BoardColumnId" class="btn btn-danger">X</a>
             </div>

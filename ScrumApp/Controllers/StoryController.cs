@@ -76,6 +76,7 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> DissociateToStory(int id)
         {
+            System.Diagnostics.Debug.WriteLine(id.ToString());
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Board");
 

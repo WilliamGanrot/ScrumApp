@@ -21,72 +21,7 @@
                         <div id="x_@boardColumn.BoardColumnId" class="story-list">
                             @foreach (var story in boardColumn.Stories)
                             {
-                                <div class="col-sm-12 sortable-story" style="padding:0;margin-bottom:1.25rem" id="story_@story.StoryId">
-                                    <div class="card story-style">
-                                        <div class="tt">
-                                            <span style="cursor:pointer;color:gray" class="fas fa-edit"></span>
-                                        </div>
-                                        <div class="card-body">
-                                            <h6 class="card-title story-handle" style="cursor: pointer">@story.StoryTitle</h6>
-
-                                        </div>
-                                        <hr />
-
-                                        <div style="width:100%;height:2rem;">
-                                            @using Microsoft.AspNetCore.Identity
-                                            @using ScrumApp.Models
-                                            @inject UserManager<AppUser> userManager
-                                            @{
-                                                var user = await userManager.FindByNameAsync(User.Identity.Name);
-
-                                            }
-                                            @if (story.UserStories.Count == 0)
-                                            {
-                                                <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer" class="material-icons d-sm-inline-flex flex-sm-row-reverse">add_circle_outline</a>
-                                            }
-                                            else
-                                            {
-                                                double offset = 0;
-                                                bool first = true;
-                                                foreach (var userStory in story.UserStories)
-                                                {
-
-                                                    if (first == false)
-                                                    {
-                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img img-offset">
-                                                        offset += 1.2;
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/media/Users/@userStory.AppUser.ProfilePicture" class="story-profil-img">
-                                                    }
-
-
-
-                                                    first = false;
-                                                }
-                                                string o = @offset.ToString().Replace(",", ".") + "rem";
-
-
-
-                                                var x = story.UserStories.Where(x => x.AppUser == user).Where(x => x.Story == story).FirstOrDefault();
-                                                <div class="wowowow pull-right" style="display:none;padding:0;margin:0;position:relative;">
-                                                    @if (x == null)
-                                                    {
-                                                        <a asp-controller="Story" asp-action="AssignToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">add_circle_outline</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a asp-controller="Story" asp-action="DissociateToStory" asp-route-id="@story.StoryId" id="tackle" style="cursor:pointer;left:@o;" class="material-icons d-sm-inline-flex flex-sm-row-reverse pull-right">remove_circle_outline</a>
-                                                    }
-                                                </div>
-                                            }
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
+                                <partial name="_StoryViewPartial" model='@story'/>
                             }
                             <p id="lala"></p>
 

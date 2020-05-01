@@ -77,7 +77,8 @@ namespace ScrumApp.Services
 {
               new UserStory {
                 Story = story,
-                AppUser = user
+                AppUser = user,
+                Date = DateTime.Now
               }
             };
 
