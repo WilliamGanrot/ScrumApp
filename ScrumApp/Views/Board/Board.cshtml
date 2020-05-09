@@ -172,12 +172,19 @@
 
         });
 
-        boardConnection.on("ReceiveMessage", function () {
+        boardConnection.on("ReceiveMessage", function (group, userName) {
+
+            if ('@user.UserName' != userName) {
+                console.log("refresh");
+                setTimeout(function () {
+                    refreshBoard();
+                }, 200);
+            }
+            else {
+                console.log("dont refresh")
+            }
 
 
-            setTimeout(function () {
-                refreshBoard();
-            }, 200);  
 
         });
 
@@ -200,7 +207,9 @@
         function refreshBoard() {
             var url = '/@Model.Project.Author.UserNameSlug/@Model.Project.Slug/@Model.BoardSlug/Board/GetData';
 
-            
+
+            var story = $(".list-view.hide").parent().parent().parent()[0]
+
 
             $.ajax({
                 url: url,
@@ -208,6 +217,21 @@
                 success: function (result) {
 
                     $("#board-content").html(result);
+
+                    if (typeof story != 'undefined') {
+
+                        var id = story.id;
+                        var desc = $(story).find(".detail-view textarea").val();
+                        var title = $(story).find(".detail-view .form-group input").val();
+
+
+                        $("#" + id).find(".list-view").addClass("hide");
+                        $("#" + id).find(".detail-view").removeClass("hide");
+                        $("#" + id).find(".detail-view textarea").val(desc);
+                        $("#" + id).find(".detail-view .form-group input").val(title);
+                    }
+
+                    
 
                     //Reatach sortable to the new dom-elements in the new partial view
                     $(".story-list").sortable({
@@ -345,6 +369,32 @@
             }
         })
 
+
+        $(document).on('click', '.fa-edit', function (evt) {
+
+            var flag = $(this.parentElement.parentElement).find(".list-view").hasClass("hide");
+
+            var storyList = $(document).find(".detail-view");
+            storyList.each(function (index, value) {
+                $(value).addClass("hide");
+            });
+
+            storyList = $(document).find(".list-view");
+            storyList.each(function (index, value) {
+                $(value).removeClass("hide");
+            });
+
+            if (flag) {
+                $(this.parentElement.parentElement).find(".list-view").removeClass("hide")
+                $(this.parentElement.parentElement).find(".detail-view").addClass("hide");
+            }
+            else {
+                $(this.parentElement.parentElement).find(".list-view").addClass("hide")
+                $(this.parentElement.parentElement).find(".detail-view").removeClass("hide");
+            }
+        });
+
+
         $(document).on('submit', '.story-style form', function (evt) {
 
             var i = document.createElement("img");
@@ -363,16 +413,21 @@
                 $(this).find("button").text("add_circle_outline");
             }
 
+            console.log(this.action);
+            console.log(this.method);
+
             $.ajax({
                 url: this.action,
                 type: this.method,
                 data: $(this).serialize(),
                 success: function(result) {
 
+                    refreshBoard();
+
                     var projectId = '@Model.Project.ProjectId';
                     var group = 'group_' + projectId;
 
-                    boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                    boardConnection.invoke("SendMessageToGroup", group, '@user.UserName').catch(function (err) {
                         return console.error(err.toString());
                     });
 
@@ -397,7 +452,7 @@
                     var projectId = '@Model.Project.ProjectId';
                     var group = 'group_' + projectId;
 
-                    boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                    boardConnection.invoke("SendMessageToGroup", group, '@user.UserName').catch(function (err) {
                         return console.error(err.toString());
                     });
 
@@ -475,6 +530,19 @@
             }
         });
 
+        $(document).on('sortstart', ".story-list", function (event, ui) {
+            /*
+            $(this).find(".list-view").removeClass("hide");
+            $(this).find(".detail-view").addClass("hide");
+
+            var id = $(ui.item)[0].id;
+            console.log($("#" + id));
+            */
+            //ui.placeholder.height(height);
+
+
+
+        });
 
         $(document).on('sortstop', ".story-list", function (event, ui) {
 
@@ -498,7 +566,7 @@
                 var group = 'group_' + projectId;
 
                 
-                boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+                boardConnection.invoke("SendMessageToGroup", group, '@user.UserName').catch(function (err) {
                     return console.error(err.toString());
                 });
                 
@@ -525,7 +593,7 @@
             var projectId = '@Model.Project.ProjectId';
             var group = 'group_' + projectId;
                         
-            boardConnection.invoke("SendMessageToGroup", group).catch(function (err) {
+            boardConnection.invoke("SendMessageToGroup", group, '@user.UserName').catch(function (err) {
                 return console.error(err.toString());
             });
             

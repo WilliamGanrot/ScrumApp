@@ -9,5 +9,6 @@ namespace ScrumApp.Models
     {
         public int BoardColumnId { get; set; }
         public string StoryTitle { get; set; }
+        public string StoryDescription { get; set; }
     }
 }

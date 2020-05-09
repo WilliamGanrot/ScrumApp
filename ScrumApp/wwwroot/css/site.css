@@ -1,10 +1,14 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.dropdown-toggle::after{
+    color:black!important;
+}
+
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -126,7 +130,6 @@ td.c1.inTable a{
     border: 3px solid rgba(0,0,0,.03);
 }
 */
-
 
 
 .ui-state-highlight {
@@ -310,4 +313,45 @@ hr{
     background-color: white;
     border: none;
     padding: 0 !important;
+}
+
+.form-control {
+    border-radius: 0;
+    border-color: darkgray;
+    border-width: 0 0 1px 0;
+    border-style: none none solid none;
+    box-shadow: none;
+    background-color: transparent;
+    color: #343a40!important;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #19698C;
+    background-color: transparent;
+}
+
+.btn-start-order {
+    background: 0 0 #FAFAFA;
+    border: none;
+    border-radius: 2px;
+    margin: 5px 0;
+    padding: 2px 5px;
+    transition: all 0.25s ease 0s;
+    color: #343a40 !important;
+    font-weight:600;
+      
+}
+
+.btn-start-order:hover, .btn-start-order:active, .btn-start-order:focus {
+    border-color: #19698C !important;
+    color: #19698C !important;
+}
+
+.form-group {
+    margin-bottom: .5rem;
+}
+
+.button-separator {
+    color: #19698C;
 }

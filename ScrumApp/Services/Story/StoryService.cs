@@ -20,6 +20,7 @@ namespace ScrumApp.Services
             Story story = new Story
             {
                 StoryTitle = createStory.StoryTitle,
+                StoryDescription = createStory.StoryDescription,
                 StorySlug = createStory.StoryTitle.ToLower().Replace(" ", "-"),
                 BoardColumn = context.BoardColumns.Find(createStory.BoardColumnId),
                 StorySorting = 100

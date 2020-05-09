@@ -14,23 +14,26 @@
 <body>
     <div class="full-height">
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="padding-bottom: 0px; padding-top: 0px;">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Home" asp-action="Index">ScrumApp</a>
+                    <a class="nav-item text-dark" asp-area="" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Projects" asp-action="Index"><i class="fa fa-home"></i> ScrumApp</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
 
                         @if (User.Identity.IsAuthenticated)
                         {
 
                         <ul class="navbar-nav flex-grow-1 justify-content-sm-end">
+
+
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+                                    
                                 </li>
                             }
 
@@ -43,31 +46,30 @@
                                 var user = await userManager.FindByNameAsync(User.Identity.Name);
                             }
 
-
-
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="/media/Users/@user.ProfilePicture" width="40" height="40" class="rounded-circle" style="border:solid white 4px">
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-55">
+                                    <a class="dropdown-item text-dark" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                    <a class="dropdown-item" href="#">Edit profile</a>
+                                </div>
                             </li>
                         </ul>
                         }
                         else
                         {
-                            <ul class="navbar-nav flex-grow-1 justify-content-sm-end">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-                                </li>
-                            </ul>
-                        }
-
-                        <ul class="navbar-nav flex-grow-1">
+                        <ul class="navbar-nav flex-grow-1 justify-content-sm-end">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-route-userSlug="" asp-route-projectSlug="" asp-route-boardSlug="" asp-controller="Projects" asp-action="Index">Projects</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         </ul>
+                        }
+
                     </div>
                 </div>
             </nav>

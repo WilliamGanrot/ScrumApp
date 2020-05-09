@@ -17,9 +17,10 @@ namespace ScrumApp.Hubs
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
         }
 
-        public Task SendMessageToGroup(string group)
+        public Task SendMessageToGroup(string group, string userName)
         {
-            return Clients.Group(group).SendAsync("ReceiveMessage", group);
+            System.Diagnostics.Debug.WriteLine(userName);
+            return Clients.Group(group).SendAsync("ReceiveMessage", group, userName);
         }
     }
 }

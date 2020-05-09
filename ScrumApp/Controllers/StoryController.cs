@@ -36,6 +36,20 @@ namespace ScrumApp.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Edit(int id, string x)
+        {
+            System.Diagnostics.Debug.WriteLine(x);
+
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "Board");
+
+
+
+            return RedirectToAction("Board", "Board");
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> reorder(int id, int[] vals)
         {
             if (!ModelState.IsValid)
@@ -57,7 +71,7 @@ namespace ScrumApp.Controllers
             if (!succesful)
                 return BadRequest("Could not remove story");
 
-            return Ok();
+            return RedirectToAction("Board", "Board");
         }
         
         public async Task<IActionResult> AssignToStory(int id)
