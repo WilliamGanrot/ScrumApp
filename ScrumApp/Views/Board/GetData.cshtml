@@ -11,8 +11,12 @@
 
             <div class="col-2 mb-4 this-is-cool" id="@boardColumn.BoardColumnId">
                 <div class="card h-100 column-style">
-                    <div class="card-header" style="font-weight:600;" id="draggable">
+                    <div class="card-header column-header" style="font-weight:600;" id="draggable">
                         @boardColumn.BoardColumnName
+                        <div class="hide remove-column">
+                            <a class="text-dark" asp-controller="BoardColumn" asp-action="Delete" asp-route-id="@boardColumn.BoardColumnId"><i class="fa fa-times"></i></a>
+                        </div>
+                        
                     </div>
 
 
@@ -40,7 +44,9 @@
             </div>
         }
         <div class="col-2 mb-2">
-            <a style="color:#343a40!important; font-weight:600" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
+            <a style="        color: #343a40 !important;
+        font-weight: 600
+" asp-route-userSlug="@Model.Project.Author.UserNameSlug" asp-route-projectSlug="@Model.Project.Slug" asp-route-boardSlug="@Model.BoardSlug" asp-controller="BoardColumn" asp-action="Create"><span class="fas fa-plus"></span>   Add Column</a>
         </div>
     </div>
 

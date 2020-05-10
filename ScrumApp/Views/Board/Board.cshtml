@@ -530,6 +530,21 @@
             }
         });
 
+        $(document).on("mouseenter", ".column-header", function () {
+            $(this).find(".remove-column").removeClass("hide");
+        });
+        $(document).on("mouseleave", ".column-header", function () {
+            $(this).find(".remove-column").addClass("hide");
+        });
+
+        /*
+        $(document).on("click", ".remove-column .fa-times", function () {
+            var id = this.parentElement.parentElement.parentElement.parentElement.id;
+            console.log();
+
+        })
+        */
+
         $(document).on('sortstart', ".story-list", function (event, ui) {
             /*
             $(this).find(".list-view").removeClass("hide");

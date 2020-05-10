@@ -74,5 +74,16 @@ namespace ScrumApp.Controllers
 
             return Ok();
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index", "Board");
+
+            bool successful = await BoardColumnService.Delete(id);
+            if (!successful)
+                return StatusCode(500);
+            return RedirectToAction("Board", "Board");
+        }
     }
 }

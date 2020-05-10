@@ -36,14 +36,15 @@ namespace ScrumApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, string x)
+        public async Task<IActionResult> Edit(EditStory editStory)
         {
-            System.Diagnostics.Debug.WriteLine(x);
 
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Board");
 
-
+            bool successful = await StoryService.Edit(editStory);
+            if (!successful)
+                return BadRequest("Could not Edit stories");
 
             return RedirectToAction("Board", "Board");
         }
@@ -90,7 +91,6 @@ namespace ScrumApp.Controllers
 
         public async Task<IActionResult> DissociateToStory(int id)
         {
-            System.Diagnostics.Debug.WriteLine(id.ToString());
             if (!ModelState.IsValid)
                 return RedirectToAction("Index", "Board");
 

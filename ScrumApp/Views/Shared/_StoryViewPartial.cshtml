@@ -16,10 +16,11 @@
             <div class="detail-view hide">
 
 
-                <form asp-controller="Story" asp-action="Create">
+                <form asp-controller="Story" asp-action="Edit">
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                    <input type="hidden" asp-for="StoryId"/>
 
                     <div class="form-group">
                         <input asp-for="StoryTitle" class="form-control" placeholder="Story title" />
@@ -30,7 +31,7 @@
 
                     <input type="submit" value="Edit" style="cursor:pointer; background-color:white; margin-bottom:0;" class="btn btn-start-order" /> | 
                     
-                    <a style="cursor:pointer; background-color:white; margin-bottom:0;" class="delete-story btn btn-start-order" asp-controller="Story" asp-action="Delete" asp-route-id="@Model.StoryId" >Delete</a>
+                    <a style="cursor:pointer; background-color:white; margin-bottom:0;" class="delete-story btn btn-start-order" asp-controller="Story" asp-action="Delete" asp-route-id="@Model.StoryId">Delete</a>
                 
                 </form>
 

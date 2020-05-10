@@ -107,5 +107,14 @@ namespace ScrumApp.Services.BoardColumn_
 
             return saveResult == 1;
         }
+
+        public async Task<bool> Delete(int id)
+        {
+            BoardColumn boardColumn = context.BoardColumns.Find(id);
+            context.BoardColumns.Remove(boardColumn);
+            int saveResult = await context.SaveChangesAsync();
+
+            return saveResult == 1;
+        }
     }
 }

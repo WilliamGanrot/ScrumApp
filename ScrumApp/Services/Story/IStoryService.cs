@@ -13,5 +13,6 @@ namespace ScrumApp.Services
         Task<bool> Delete(int id);
         Task<bool> AssignToStory(int id, AppUser user);
         Task<bool> DissociateToStory(int id, AppUser user);
+        Task<bool> Edit(EditStory editStory);
     }
 }

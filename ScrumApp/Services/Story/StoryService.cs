@@ -42,6 +42,18 @@ namespace ScrumApp.Services
             return saveResult == 1;
         }
 
+        public async Task<bool> Edit(EditStory editStory)
+        {
+            Story story = await context.Stories.FindAsync(editStory.StoryId);
+            story.StoryTitle = editStory.StoryTitle;
+            story.StoryDescription = editStory.StoryDescription;
+
+            context.Stories.Update(story);
+            int saveResult = await context.SaveChangesAsync();
+
+            return saveResult == 1;
+        }
+
         public async Task<bool> Reorder(int BoardColumnId, int[] vals)
         {
             BoardColumn boardColumn = await context.BoardColumns.FindAsync(BoardColumnId);

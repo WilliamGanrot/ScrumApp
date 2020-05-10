@@ -16,5 +16,6 @@ namespace ScrumApp.Services.BoardColumn_
         Task<bool> ReorderColumns(int id, int[] vals);
         Task<bool> SaveBoardColumn(BoardColumn boardColumn, string slug, Board currentBoard);
         bool IsBussyBoardColumnSlug(Board currentBoard, string slug);
+        Task<bool> Delete(int id);
     }
 }

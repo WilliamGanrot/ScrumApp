@@ -16,6 +16,11 @@ a {
   color: #0366d6;
 }
 
+.remove-column {
+    float: right;
+    color: #343a40 !important;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
