@@ -115,7 +115,7 @@ namespace ScrumApp.Controllers.Account
                         {
                             return Redirect(returnUrl);
                         }
-                        return RedirectToAction("index", "home");
+                        return RedirectToAction("Index", "Projects");
                     }
                     ModelState.AddModelError("", "Login failed, wrong username or password");
                 }
