@@ -1,38 +1,82 @@
 ﻿@model ScrumApp.Models.Account.UserLogin
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Home Page";
+    Layout = "";
 }
 
-<h1>Login</h1>
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ScrumApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login-register.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <input type="hidden" asp-for="ReturnUrl"/>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="form-signin">
+    <form asp-action="Login">
+
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <img id="login_logo" src="~/media/Logos/logo_black_name.png" alt="">
+        <h2 class="form-signin-heading">Welcome back</h2>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <input asp-for="UserName" class="form-control" style="border-radius: 1px;" placeholder="Email Address" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="padding-bottom:1rem;margin-bottom:0;">
+            <input asp-for="Password" class="form-control" style="border-radius: 1px;" placeholder="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+
+
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn btn-lg btn-primary btn-block" style="padding-bottom:0;padding-top:0;margin-bottom:0;" />
+        </div>
+        <a style="font-size:.8rem;" href="">Forgoten passowrd?</a>
+
+    </form>
+
+    <div style="text-align:center;margin-bottom:0.7rem;">
+        or
     </div>
+
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="light"></div>
+
+    <div class="fb-btn">
+        <div class="logo" style="float:left; display:inline-block;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 -5 48 48" version="1">
+                <path fill="#FFFFFF" d="M32 30a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v28z" />
+                <path fill="#4267b2" d="M22 32V20h4l1-5h-5v-2c0-2 1.002-3 3-3h2V5h-4c-3.675 0-6 2.881-6 7v3h-4v5h4v12h5z" />
+            </svg>
+        </div>
+        <div>
+            <p>Sign in with Facebook</p>
+        </div>
+    </div>
+
+
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(".abcRioButtonContents").on("load", function () {
+
+    });
+</script>
+
+   
 }
