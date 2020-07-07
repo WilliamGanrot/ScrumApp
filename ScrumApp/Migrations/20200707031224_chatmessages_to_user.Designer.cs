@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScrumApp.Data;
 
 namespace ScrumApp.Migrations
 {
     [DbContext(typeof(ScrumApplicationContext))]
-    partial class ScrumApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200707031224_chatmessages_to_user")]
+    partial class chatmessages_to_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

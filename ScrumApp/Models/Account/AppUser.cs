@@ -15,5 +15,6 @@ namespace ScrumApp.Models
         public string ProfilePicture { get; set; }
         public ICollection<UserProject> UserProjects { get; set; }
         public ICollection<UserStory> UserStories { get; set; }
+        public ICollection<ChatMessage> chatMessages { get; set; }
     }
 }

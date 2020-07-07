@@ -38,7 +38,8 @@ namespace ScrumApp.Data
                 .HasOne(bc => bc.Story)
                 .WithMany(c => c.UserStories)
                 .HasForeignKey(bc => bc.StoryId);
-            
+
+
             base.OnModelCreating(modelBuilder);
         }
 
